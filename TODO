@@ -1,0 +1,17 @@
+Integrate with http://github.com/supermihi/pytaglib
+Update setup.py
+Change README.md to README.rst
+Update README.rst
+Implement proper logging
+Implement proper error exception
+Implement proper unit test
+Copy multiple file at the same time
+Detect if copy on two different FS (mv or cp+rm should be chosen with different scheduler)
+#    >>> stat_info = os.lstat("/var")
+#    >>> stat_info.st_dev
+#    16777220L
+Check available space before copy
+#    >>> stat_info = os.statvfs("/var")
+#    >>> stat_info.f_bfree
+#    12552644
+Integrate with taglib
