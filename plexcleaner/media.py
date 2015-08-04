@@ -7,7 +7,7 @@ import os
 import hashlib
 from pyjarowinkler import distance
 
-from plexcleaner import PlexDatabaseException
+from exception import PlexDatabaseException
 
 
 class Library(object):

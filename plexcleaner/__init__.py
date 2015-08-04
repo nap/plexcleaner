@@ -9,6 +9,3 @@ log_config = {
     'level': logging.DEBUG
 }
 logging.basicConfig(**log_config)
-
-from media import Library
-from exception import PlexDatabaseException, PlexCleanerException

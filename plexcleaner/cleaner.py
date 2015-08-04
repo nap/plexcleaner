@@ -7,7 +7,9 @@ import logging
 from subprocess import check_call, CalledProcessError
 
 import cli
-from plexcleaner import LOG, Library, PlexDatabaseException, PlexCleanerException
+from plexcleaner import LOG
+from exception import PlexCleanerException, PlexDatabaseException
+from media import Library
 
 
 def copy(src, dst):  # Should allow parallel process call
