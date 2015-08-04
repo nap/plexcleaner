@@ -14,4 +14,3 @@ Check available space before copy
 #    >>> stat_info = os.statvfs("/var")
 #    >>> stat_info.f_bfree
 #    12552644
-Integrate with taglib
