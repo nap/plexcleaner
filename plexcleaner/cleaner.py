@@ -55,7 +55,7 @@ def main(plex_home, new_library, jacket, database_override, interrupt, log_level
                 LOG.debug(u"Movie '{0}' is already in target library {1}".format(media_file, new_library))
 
             else:
-                LOG.debug(u"Copying movie '{0}' in '{1}'".format(movie.get_formatted_file(), new_library))
+                LOG.debug(u"Copying movie '{0}' in '{1}'".format(movie.get_formatted_file(), media_directory))
 
     except PlexDatabaseException as de:
         print de.message
