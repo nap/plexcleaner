@@ -14,16 +14,15 @@ Example
 
 Suggested Media Library Format
 ------------------------------
+::
 
-```
-. $NEW_LIBRARY/Movies
-|- /Avatar (2009)
-|  |- Avatar (2009).mkv
-|  `- poster.jpg
-`- /Batman Begins (2005)
-   |- Batman Begins (2005).mp4
-   |- Batman Begins (2005).eng.srt
-   `- poster.jpg
-```
+    . $NEW_LIBRARY/Movies
+    |- /Avatar (2009)
+    |  |- Avatar (2009).mkv
+    |  `- poster.jpg
+    `- /Batman Begins (2005)
+       |- Batman Begins (2005).mp4
+       |- Batman Begins (2005).eng.srt
+       `- poster.jpg
 
 :Version: 0.0.1 of 2015-XX-XX
