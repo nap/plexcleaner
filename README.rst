@@ -11,6 +11,26 @@ matched by Plex therefore, this application will not transfer the media file to 
 
 Example
 -------
+::
+
+    unary$ python plexcleaner/cleaner.py --help
+    Usage: cleaner.py [OPTIONS]
+    
+    Options:
+      --plex-home PATH                Installation location of the Plex Media
+                                      Server.
+      --new-library PATH              Where to consolidate the updated library.
+      --jacket TEXT                   Name that each movie jacket will have.
+      --database-override PATH        Override the expected Plex Database
+                                      location.
+      --interrupt                     Interrupt the whole process if a movie file
+                                      is not found.
+      --log-level [DEBUG|INFO|WARNING|CRITICAL|ERROR]
+                                      Application verbosity, default is INFO
+      --move-media                    Should the tool move or copy to the new
+                                      library.
+      --help                          Show this message and exit.
+
 
 Suggested Media Library Format
 ------------------------------
