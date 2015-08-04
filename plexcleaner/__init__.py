@@ -1,8 +1,5 @@
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
-from exception import PlexMediaFileException, PlexDatabaseException, PlexCleanerException
-from media import Library
-
 import logging
 
 LOG = logging.getLogger(__name__)
@@ -12,3 +9,6 @@ log_config = {
     'level': logging.DEBUG
 }
 logging.basicConfig(**log_config)
+
+from media import Library
+from exception import PlexDatabaseException, PlexCleanerException
