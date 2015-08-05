@@ -37,27 +37,27 @@ def main(plex_home, new_library, jacket, database_override, interrupt, log_level
         if not len(library):
             raise PlexCleanerException("Library is empty.")
 
-        for title, movie in library:
-            LOG.info(u"Processing: {0}".format(title))
+        for movie in library:
+            LOG.info(u"Processing: {0}".format(movie.safe_title))
 
             media_directory = movie.get_new_path(new_library)
             if not os.path.isdir(media_directory):
-                LOG.debug(u"Creating directory '{0}' in {1}".format(media_directory, new_library))
+                LOG.info(u"Creating directory '{0}' in {1}".format(movie.get_formatted_directory(), new_library))
                 # TODO: os.mkdir(media_directory)
 
             media_poster = os.path.join(media_directory, jacket)
             if os.path.isfile(media_poster):
-                LOG.debug(u"Poster '{0}' is already in target library".format(media_poster))
+                LOG.warning(u"Poster '{0}' is already in target library".format(media_poster))
 
             else:
-                LOG.debug(u"Copying movie '{0}' in '{1}'".format(jacket, media_directory))
+                LOG.info(u"Copying poster '{0}' in '{1}'".format(jacket, media_directory))
 
             media_file = movie.get_new_filename(new_library)
             if os.path.exists(media_file):
-                LOG.debug(u"Movie '{0}' is already in target library {1}".format(media_file, new_library))
+                LOG.warning(u"Movie '{0}' is already in target library {1}".format(media_file, new_library))
 
             else:
-                LOG.debug(u"Copying movie '{0}' in '{1}'".format(movie.get_formatted_file(), media_directory))
+                LOG.info(u"Copying movie '{0}' in '{1}'".format(movie.get_formatted_file(), media_directory))
 
     except PlexDatabaseException as de:
         print de.message
@@ -66,7 +66,7 @@ def main(plex_home, new_library, jacket, database_override, interrupt, log_level
         print ce.message
 
     except KeyboardInterrupt:
-        print "bye."
+        LOG.info("bye.")
         sys.exit(0)
 
 if __name__ == '__main__':
