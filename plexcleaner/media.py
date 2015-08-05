@@ -39,9 +39,10 @@ class Library(object):
                     movie = Movie(*row, metadata_home=metadata_home)
 
                     if movie.has_poster:  # If a poster was synced, this means that the movie was matched in Plex
+                        # Will cause problem if two files has the same title but different extension
                         self.library.update({movie.title: movie})
 
-                        if movie.exist:
+                        if movie.exist:  # Movie might be in the database but it might be absent in the filesystem
                             self.effective_size += movie.size
 
                     self.unmatched.update({movie.title: movie})
