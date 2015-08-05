@@ -1,6 +1,4 @@
 Integrate with http://github.com/supermihi/pytaglib
-Update setup.py
-Change README.md to README.rst
 Update README.rst
 Implement proper logging
 Implement proper error exception
@@ -14,3 +12,8 @@ Check available space before copy
 #    >>> stat_info = os.statvfs("/var")
 #    >>> stat_info.f_bfree
 #    12552644
+Movie are added with title in library, use hash of filename.ext instead
+Use taglib to identify the better file when duplicate with different extension
+Generate HTML report of file copied/moved/deleted/untouched
+Attempt to match unmatched media
+Integrate with https://github.com/wackou/guessit
