@@ -24,8 +24,8 @@ class Library(object):
                  metadata_home='/var/lib/plexmediaserver',
                  database_override=None):
 
-        self.library = dict()
-        self.unmatched = dict()
+        self.library = []
+        self.unmatched = []
         self.effective_size = 0
         database = os.path.join(metadata_home, self._database_path, database_name)
         try:
@@ -40,18 +40,19 @@ class Library(object):
 
                     if movie.has_poster:  # If a poster was synced, this means that the movie was matched in Plex
                         # Will cause problem if two files has the same title but different extension
-                        self.library.update({movie.title: movie})
+                        self.library.append(movie)
 
                         if movie.exist:  # Movie might be in the database but it might be absent in the filesystem
                             self.effective_size += movie.size
 
-                    self.unmatched.update({movie.title: movie})
+                    self.unmatched.append(movie)
 
         except sqlite3.OperationalError:
             raise PlexDatabaseException("Could not connect to Plex database\n{0}".format(database))
 
     def __iter__(self):
-        return self.library.iteritems()
+        for m in self.library:
+            yield m
 
     def __len__(self):
         return len(self.library)
