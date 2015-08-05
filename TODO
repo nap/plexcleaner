@@ -1,4 +1,4 @@
-Integrate with http://github.com/supermihi/pytaglib
+Integrate with http://github.com/supermihi/pytaglib (or use media_items value of matched media)
 Update README.rst
 Implement proper logging
 Implement proper error exception
