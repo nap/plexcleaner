@@ -3,6 +3,8 @@ DB_SQL? = $(DB_PATH)
 DB_NAME? = test.db
 DB? = $(DB_PATH)/$(DB_NAME)
 
+all: build
+
 .PHONY: clean schema data build
 .DEFAULT: build
 build: clean schema data
