@@ -1,5 +1,6 @@
 Implement proper unit test
 Implement inplace copy
+Update PlexDatabase with new location for media
 Copy multiple file at the same time
 Detect if copy on two different FS (mv or cp+rm should be chosen with different scheduler)
 #    >>> stat_info = os.lstat("/var")
