@@ -1,6 +1,6 @@
 DB_PATH? = etc
 DB_SQL? = $(DB_PATH)
-DB_NAME? = test.db
+DB_NAME? = com.plexapp.plugins.library.db
 DB? = $(DB_PATH)/$(DB_NAME)
 
 all: build
