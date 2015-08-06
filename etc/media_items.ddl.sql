@@ -29,7 +29,3 @@ CREATE TABLE media_items
     sample_aspect_ratio REAL,
     extra_data TEXT
 );
-CREATE UNIQUE INDEX index_media_items_on_media_analysis_version ON media_items (media_analysis_version);
-CREATE UNIQUE INDEX index_media_items_on_deleted_at ON media_items (deleted_at);
-CREATE UNIQUE INDEX index_media_items_on_metadata_item_id ON media_items (metadata_item_id);
-CREATE UNIQUE INDEX index_media_items_on_library_section_id ON media_items (library_section_id);
