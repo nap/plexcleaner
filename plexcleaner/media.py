@@ -23,7 +23,7 @@ class Library(object):
 
     def __init__(self,
                  database_name='com.plexapp.plugins.library.db',
-                 metadata_home='/var/lib/plexmediaserver/Library/',
+                 metadata_home='/var/lib/plexmediaserver',
                  database_override=None):
 
         self.library = []
@@ -69,7 +69,7 @@ class Library(object):
 class Movie(object):
     """ Describe movie file as it can be found in the Plex Database
     """
-    _metadata_path = 'Application Support/Plex Media Server/Metadata/Movies'
+    _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
     _jacket_path = "{0}/{1}.bundle/Contents/_stored/{2}"
     _default_jacket = "thumb1"
 
