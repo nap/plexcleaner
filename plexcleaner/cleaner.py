@@ -23,12 +23,13 @@ def copy(src, dst):  # Should allow parallel process call
 @click.command()
 @click.option('--plex-home', **cli.plex_home)
 @click.option('--new-library', **cli.new_library)
+@click.option('--update', **cli.update)
 @click.option('--jacket', **cli.jacket)
-@click.option('--database-override', **cli.database_override)
 @click.option('--interrupt', **cli.interrupt)
+@click.option('--move-media', **cli.export)
 @click.option('--log-level', **cli.log_level)
-@click.option('--move-media', **cli.move_media)
-def main(plex_home, new_library, jacket, database_override, interrupt, log_level, move_media):
+@click.option('--database-override', **cli.database_override)
+def main(plex_home, new_library, update, jacket, interrupt, export, log_level, database_override):
     LOG.setLevel(logging.getLevelName(log_level.upper()))
 
     try:
