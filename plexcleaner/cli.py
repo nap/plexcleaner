@@ -47,5 +47,5 @@ export = {
     'type': click.BOOL,
     'default': False,
     'is_flag': True,
-    'help': 'Should the tool move or copy to the new library.'
+    'help': 'Should the tool move to the new library.'
 }

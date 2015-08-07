@@ -26,7 +26,7 @@ def copy(src, dst):  # Should allow parallel process call
 @click.option('--update', **cli.update)
 @click.option('--jacket', **cli.jacket)
 @click.option('--interrupt', **cli.interrupt)
-@click.option('--move-media', **cli.export)
+@click.option('--export', **cli.export)
 @click.option('--log-level', **cli.log_level)
 @click.option('--database-override', **cli.database_override)
 def main(plex_home, new_library, update, jacket, interrupt, export, log_level, database_override):
