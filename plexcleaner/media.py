@@ -60,11 +60,6 @@ class Library(object):
     def __len__(self):
         return len(self.library)
 
-# TODO: Review attributes
-# TODO: add meta information
-# TODO: Update serialisation to tell movie status : valid|deleted|unmatched
-# TODO: Get for poster
-
 
 class Movie(object):
     """ Describe movie file as it can be found in the Plex Database
