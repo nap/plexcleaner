@@ -5,6 +5,7 @@ import string
 import sqlite3
 import os
 import hashlib
+import json
 from pyjarowinkler import distance
 
 from exception import PlexDatabaseException
@@ -14,19 +15,18 @@ class Library(object):
     _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
     _select_movies = (
         'SELECT metadata_items.title, media_parts.file, metadata_items.year, ',
-        'metadata_items.guid, metadata_items.user_thumb_url FROM media_items ',
+        'metadata_items.size, metadata_items.frames_per_second AS fps, '
+        'metadata_items.guid, metadata_items.user_thumb_url AS jacket FROM media_items ',
         'JOIN metadata_items ON media_items.metadata_item_id = metadata_items.id ',
         'JOIN media_parts ON media_parts.media_item_id = media_items.id'
     )
 
     def __init__(self,
                  database_name='com.plexapp.plugins.library.db',
-                 metadata_home='/var/lib/plexmediaserver',
+                 metadata_home='/var/lib/plexmediaserver/Library/',
                  database_override=None):
 
         self.library = []
-        self.unmatched = []
-        self.deleted = []
         self.effective_size = 0
 
         database = os.path.join(metadata_home, self._database_path, database_name)
@@ -38,33 +38,17 @@ class Library(object):
                 cursor = conn.cursor()
 
                 for row in cursor.execute(''.join(self._select_movies)):
-                    movie = Movie(*row, metadata_home=metadata_home)
-
+                    movie = Movie(*row)
                     self._update_library(movie)
 
         except sqlite3.OperationalError:
             raise PlexDatabaseException("Could not connect to Plex database\n{0}".format(database))
 
     def _update_library(self, movie):
-        if movie.has_poster:  # If a poster was synced, this means that the movie was matched in Plex
-            # Will cause problem if two files has the same title but different extension
-            self.library.append(movie)
+        self.library.append(movie)
 
-            if movie.exist:  # Movie might be in the database but it might be absent in the filesystem
-                self.effective_size += movie.size
-
-            else:  # Keep track of movie that are unavailable on the filesystem
-                self.deleted.append(movie)
-
-        self.unmatched.append(movie)
-
-    def deleted(self):
-        for m in self.deleted:
-            yield m
-
-    def unmatched(self):
-        for m in self.unmatched:
-            yield m
+        if movie.exist and movie.matched:  # Movie might be in the database but it might be absent in the filesystem
+            self.effective_size += movie.size
 
     def get_library(self):
         return self.library
@@ -83,25 +67,29 @@ class Library(object):
 
 
 class Movie(object):
-    _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
-    _poster_path = "{0}/{1}.bundle/Contents/_stored/{2}"
+    """ Describe movie file as it can be found in the Plex Database
+    """
+    _metadata_path = 'Application Support/Plex Media Server/Metadata/Movies'
+    _jacket_path = "{0}/{1}.bundle/Contents/_stored/{2}"
+    _default_jacket = "thumb1"
 
-    def __init__(self, title, filename, year, guid, poster, metadata_home='/var/lib/plexmediaserver',
-                 default_poster='thumb1'):
-        self.metadata_home = metadata_home
-        self.default_poster = default_poster
-        self.file = filename
-        self.filepath = os.path.dirname(filename)
-        self.filename, self.file_ext = os.path.splitext(os.path.basename(filename))
+    def __init__(self, title, absolute_file, year, size, fps, guid, jacket):
+        self.filepath = os.path.dirname(absolute_file)
+        self.filename, self.file_ext = os.path.splitext(os.path.basename(absolute_file))
+
         self.title = title
-        self.safe_title = self._clean_filename()
-        self.title_distance = distance.get_jaro_distance(self.title, self.safe_title)
+        self.correct_title = self._clean_filename()
+        self.title_distance = distance.get_jaro_distance(self.title, self.correct_title)
+
         self.year = year
-        self.exist = os.path.exists(filename)
-        self.size = os.stat(self.file).st_size if self.exist else 0
-        self.guid = guid
-        parent_path, child_path = self._get_hash()[0], self._get_hash()[1]
-        self.poster = self._poster_path.format(parent_path, child_path, poster[11:])  # Remove metadata://
+        self.size = size
+        self.fps = fps
+        self.exist = os.path.exists(absolute_file)
+        self.matched = self._default_jacket not in jacket
+
+        if self.matched:
+            h = hashlib.sha1(guid).hexdigest()
+            self.jacket = os.path.join(self._metadata_path, self._jacket_path.format(h[0], h[1], jacket[11:]))
 
     def _clean_filename(self, replacements=None):
         if not replacements:
@@ -113,38 +101,36 @@ class Movie(object):
 
         return ''.join(char for char in cleaned if char in "-_.()' {0}{1}".format(string.ascii_letters, string.digits))
 
-    def has_poster(self):
-        return self.default_poster not in self.poster
+    def get_correct_directory(self):
+        return "{0} ({1})".format(self.correct_title, self.year)
 
-    def get_formatted_directory(self):
-        return "{0} ({1})".format(self.safe_title, self.year)
+    def get_correct_filename(self):
+        return "{0} ({1}){2}".format(self.correct_title, self.year, self.file_ext)
 
-    def get_formatted_file(self):
-        return "{0} ({1}){2}".format(self.safe_title, self.year, self.file_ext)
+    def get_correct_path(self):
+        return os.path.join(self.get_correct_directory(), self.get_correct_filename())
 
-    def get_new_filename(self, new_library):
-        return os.path.join(new_library, self.get_formatted_directory(), self.get_formatted_file())
+    def get_correct_absolute_path(self, parent=None):  # parent is for move the file to a new location
+        if not parent:
+            return os.path.join(self.filepath, self.get_correct_path())
 
-    def get_new_path(self, new_library):
-        return os.path.join(new_library, self.get_formatted_directory())
+        return os.path.join(parent, self.get_correct_path())
 
-    def _get_hash(self):
-        return hashlib.sha1(self.guid).hexdigest()
+    def get_metadata_jacket(self):
+        if not self.matched:
+            return None
 
-    def as_dict(self):
-        return str({
-            self.title: {
-                'filename': self.filename,
-                'filepath': self.filepath,
-                'exist': self.exist,
-                'file': self.file,
-                'size': self.size,
-                'title_distance': self.title_distance,
-                'safe_title': self.safe_title,
-                'file_ext': self.file_ext[1:],
-                'formatted_file': self.get_formatted_file(),
-                'formatted_directory': self.get_formatted_directory(),
-                'poster': os.path.join(self.metadata_home, self._metadata_path, self.poster)
-            }
-        })
+        return os.path.join(self._metadata_path, self.jacket)
 
+    def __str__(self):
+        serialized = dict()
+        attributes = [a for a in dir(self) if not a.startswith('_')]
+
+        for attribute in attributes:
+            if callable(self.__getattribute__(attribute)):
+                serialized.update({attribute.replace('get_', ''): getattr(self, attribute)()})
+
+            else:
+                serialized.update({attribute: self.__getattribute__(attribute)})
+
+        return json.dumps(serialized)
