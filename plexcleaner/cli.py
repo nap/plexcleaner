@@ -10,8 +10,13 @@ plex_home = {
 
 new_library = {
     'type': click.Path(exists=True, file_okay=True, dir_okay=True, writable=True, readable=True, resolve_path=True),
-    'default': '/mnt/media/video',
-    'help': 'Where to consolidate the updated library.'
+    'help': 'Consolidate the updated library in a new folder.'
+}
+
+update = {
+    'type': click.BOOL,
+    'default': True,
+    'help': 'Update Plex database with renamed and moved media.'
 }
 
 jacket = {
@@ -22,15 +27,7 @@ jacket = {
 
 database_override = {
     'type': click.Path(exists=True, dir_okay=True, readable=True, resolve_path=True),
-    'default': '',
     'help': 'Override the expected Plex Database location.'
-}
-
-interrupt = {
-    'type': click.BOOL,
-    'default': False,
-    'is_flag': True,
-    'help': 'Interrupt the whole process if a movie file is not found.'
 }
 
 log_level = {
@@ -39,7 +36,14 @@ log_level = {
     'help': 'Application verbosity, default is INFO'
 }
 
-move_media = {
+interrupt = {
+    'type': click.BOOL,
+    'default': False,
+    'is_flag': True,
+    'help': 'Interrupt the whole process if a movie file is not found on the filesystem.'
+}
+
+export = {
     'type': click.BOOL,
     'default': False,
     'is_flag': True,
