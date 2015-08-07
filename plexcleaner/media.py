@@ -26,7 +26,9 @@ class Library(object):
 
         self.library = []
         self.unmatched = []
+        self.deleted = []
         self.effective_size = 0
+
         database = os.path.join(metadata_home, self._database_path, database_name)
         try:
             if database_override:
@@ -38,17 +40,34 @@ class Library(object):
                 for row in cursor.execute(''.join(self._select_movies)):
                     movie = Movie(*row, metadata_home=metadata_home)
 
-                    if movie.has_poster:  # If a poster was synced, this means that the movie was matched in Plex
-                        # Will cause problem if two files has the same title but different extension
-                        self.library.append(movie)
-
-                        if movie.exist:  # Movie might be in the database but it might be absent in the filesystem
-                            self.effective_size += movie.size
-
-                    self.unmatched.append(movie)
+                    self._update_library(movie)
 
         except sqlite3.OperationalError:
             raise PlexDatabaseException("Could not connect to Plex database\n{0}".format(database))
+
+    def _update_library(self, movie):
+        if movie.has_poster:  # If a poster was synced, this means that the movie was matched in Plex
+            # Will cause problem if two files has the same title but different extension
+            self.library.append(movie)
+
+            if movie.exist:  # Movie might be in the database but it might be absent in the filesystem
+                self.effective_size += movie.size
+
+            else:  # Keep track of movie that are unavailable on the filesystem
+                self.deleted.append(movie)
+
+        self.unmatched.append(movie)
+
+    def deleted(self):
+        for m in self.deleted:
+            yield m
+
+    def unmatched(self):
+        for m in self.unmatched:
+            yield m
+
+    def get_library(self):
+        return self.library
 
     def __iter__(self):
         for m in self.library:
