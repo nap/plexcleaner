@@ -76,6 +76,11 @@ class Library(object):
     def __len__(self):
         return len(self.library)
 
+# TODO: Review attributes
+# TODO: add meta information
+# TODO: Update serialisation to tell movie status : valid|deleted|unmatched
+# TODO: Get for poster
+
 
 class Movie(object):
     _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
