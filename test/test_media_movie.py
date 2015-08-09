@@ -2,47 +2,9 @@ import unittest
 import os
 import hashlib
 import json
-from plexcleaner.media import Library, Movie
-from plexcleaner.exception import PlexDatabaseException
+from plexcleaner.media import Movie
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
-
-
-class TestMediaLibrary(unittest.TestCase):
-    _nb_movie = 98
-    _effective_size = 100275991932
-
-    def test_init(self):
-        library = Library(database_override='test/database/com.plexapp.plugins.library.db')
-        self.assertEqual(len(library), self._nb_movie)
-
-    def test_update_library(self):
-        library = Library(database_override='test/database/com.plexapp.plugins.library.db')
-        movie = Movie(u"a", "b", 1, 2, 2.2, "d", "e")
-        library._update_library(movie)
-        self.assertEqual(len(library), self._nb_movie + 1)
-
-    def test_database_exception(self):
-        with self.assertRaises(PlexDatabaseException) as e:
-            library = Library(database_override='database/some.bad.db.name')
-        self.assertTrue('Could not connect' in e.exception.message)
-
-    def test_effective_size(self):
-        library = Library(database_override='test/database/com.plexapp.plugins.library.db')
-        movie = Movie(u"a", 'b', 1, 2, 2.2, 'd', 'e')
-        movie.exist = False
-        library._update_library(movie)
-        self.assertEqual(library.effective_size, self._effective_size)
-        movie.exist = True
-        movie.matched = True
-        library._update_library(movie)
-        self.assertEqual(library.effective_size, self._effective_size + 2)
-
-    def test_iter(self):
-        library = Library(database_override='test/database/com.plexapp.plugins.library.db')
-        self.assertEqual(type(library.__iter__()).__name__, 'generator')
-        m = library.__iter__().next()
-        self.assertEqual(m.__class__.__name__, 'Movie')
 
 
 class TestMediaMovie(unittest.TestCase):
