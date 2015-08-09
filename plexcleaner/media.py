@@ -32,15 +32,15 @@ class Library(object):
 
         database = os.path.join(metadata_home, self._database_path, database_name)
         try:
-        if database_override:
-            database = database_override
+            if database_override:
+                database = database_override
 
-        with sqlite3.connect(database) as conn:
-            cursor = conn.cursor()
+            with sqlite3.connect(database) as conn:
+                cursor = conn.cursor()
 
-            for row in cursor.execute(''.join(self._select_movies)):
-                movie = Movie(*row)
-                self._update_library(movie)
+                for row in cursor.execute(''.join(self._select_movies)):
+                    movie = Movie(*row)
+                    self._update_library(movie)
 
         except sqlite3.OperationalError:
             raise PlexDatabaseException("Could not connect to Plex database: {0}".format(database))
