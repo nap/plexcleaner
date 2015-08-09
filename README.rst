@@ -18,14 +18,13 @@ Help
     Options:
       --plex-home PATH                Installation location of the Plex Media
                                       Server.
-      --new-library PATH              Consolidate the updated library in a new
+      --export PATH                   Move the updated library format in a new
                                       folder.
-      --update BOOLEAN                Update Plex database with renamed and moved
+      --update                        Update Plex database with renamed and moved
                                       media.
       --jacket TEXT                   Name that each movie jacket will have.
       --interrupt                     Interrupt the whole process if a movie file
                                       is not found on the filesystem.
-      --export                        Should the tool move to the new library.
       --log-level [DEBUG|INFO|WARNING|CRITICAL|ERROR]
                                       Application verbosity, default is INFO
       --database-override PATH        Override the expected Plex Database
