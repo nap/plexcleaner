@@ -38,9 +38,9 @@ data: media_items.data media_part.data metadata_items.data
 
 clean:
 	@printf "Cleaning old test data: "
-	@rm -f $(DATA_PATH)/{database,library,posters}/*
-	@mkdir -p $(DATA_PATH)/{database,library,posters}
-	@test -d $(DATA_PATH)/database
+	@rm -f $(DATA_PATH)/database/*
+	@rm -f $(DATA_PATH)/library/*
+	@rm -f $(DATA_PATH)/posters/*
 	@echo "done"
 
 movies:
