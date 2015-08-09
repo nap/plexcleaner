@@ -1,6 +1,5 @@
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
-import os
 import sys
 import click
 import logging
