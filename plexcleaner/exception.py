@@ -1,5 +1,6 @@
-__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 from plexcleaner import LOG
+
+__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class PlexCleanerException(Exception):

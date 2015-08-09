@@ -1,6 +1,6 @@
-__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
-
 import click
+
+__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 plex_home = {
     'type': click.Path(exists=True, dir_okay=True, readable=True, resolve_path=True),

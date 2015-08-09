@@ -1,5 +1,3 @@
-__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
-
 import unicodedata
 import string
 import sqlite3
@@ -9,6 +7,8 @@ import json
 from pyjarowinkler import distance
 
 from exception import PlexDatabaseException
+
+__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class Library(object):

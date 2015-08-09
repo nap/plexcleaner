@@ -1,5 +1,3 @@
-__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
-
 import sys
 import click
 import logging
@@ -8,6 +6,8 @@ import cli
 from plexcleaner import LOG
 from exception import PlexCleanerException, PlexDatabaseException
 from media import Library
+
+__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 @click.command()

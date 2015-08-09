@@ -1,6 +1,6 @@
-__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
-
 import logging
+
+__author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 LOG = logging.getLogger(__name__)
 log_config = {
