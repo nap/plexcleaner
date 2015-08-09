@@ -13,9 +13,10 @@ from exception import PlexDatabaseException
 
 class Library(object):
     _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
+    # TODO: Figureout what media_items.deleted_at implies
     _select_movies = (
         'SELECT metadata_items.title, media_parts.file, metadata_items.year, ',
-        'metadata_items.size, metadata_items.frames_per_second AS fps, '
+        'media_parts.size, media_items.frames_per_second AS fps, '
         'metadata_items.guid, metadata_items.user_thumb_url AS jacket FROM media_items ',
         'JOIN metadata_items ON media_items.metadata_item_id = metadata_items.id ',
         'JOIN media_parts ON media_parts.media_item_id = media_items.id'
@@ -31,18 +32,18 @@ class Library(object):
 
         database = os.path.join(metadata_home, self._database_path, database_name)
         try:
-            if database_override:
-                database = database_override
+        if database_override:
+            database = database_override
 
-            with sqlite3.connect(database) as conn:
-                cursor = conn.cursor()
+        with sqlite3.connect(database) as conn:
+            cursor = conn.cursor()
 
-                for row in cursor.execute(''.join(self._select_movies)):
-                    movie = Movie(*row)
-                    self._update_library(movie)
+            for row in cursor.execute(''.join(self._select_movies)):
+                movie = Movie(*row)
+                self._update_library(movie)
 
         except sqlite3.OperationalError:
-            raise PlexDatabaseException("Could not connect to Plex database\n{0}".format(database))
+            raise PlexDatabaseException("Could not connect to Plex database: {0}".format(database))
 
     def _update_library(self, movie):
         self.library.append(movie)
