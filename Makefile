@@ -40,6 +40,7 @@ clean:
 	@printf "Cleaning old test data: "
 	@rm -f $(DATA_PATH)/{database,library,posters}/*
 	@mkdir -p $(DATA_PATH)/{database,library,posters}
+	@test -d $(DATA_PATH)/database
 	@echo "done"
 
 movies:
