@@ -5,7 +5,7 @@ PWD = $(shell pwd)
 
 all: build
 
-build: clean schema data files
+build: clean schema data movies
 
 metadata_items.ddl:
 	@printf "Create schema metadata_items: "
@@ -38,18 +38,24 @@ data: media_items.data media_part.data metadata_items.data
 
 clean:
 	@printf "Cleaning old test data: "
-	@rm -f $(DATA_PATH)/{database,library}/*
-	@mkdir -p $(DATA_PATH)/{database,library}
+	@rm -f $(DATA_PATH)/{database,library,posters}/*
+	@mkdir -p $(DATA_PATH)/{database,library,posters}
 	@echo "done"
 
-files:
+movies:
 	@echo
 	@echo "Library in: $(PWD)/$(DATA_PATH)/library"
-	@printf "Update test data with new file location: "
+	@echo "Posters in: $(PWD)/$(DATA_PATH)/posters"
+	@printf "Generating test media file: "
 	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT file FROM media_parts" | xargs -I {} basename "{}" | xargs -I {} touch $(DATA_PATH)/library/"{}"
+	@echo "done"
+	@printf "Update test data with new file location: "
 	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT id, file FROM media_parts" | \
 	awk -F "|" '{printf $$1 " " $$2 "\n"}' | \
 	while read ID FILE; do \
 		env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "UPDATE media_parts SET file = '$(PWD)/$(DATA_PATH)/library/$$(basename "$$FILE")' WHERE id = $$ID"; \
 	done
+	@echo "done"
+	@printf "Generating test poster file: "
+	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT user_thumb_url FROM metadata_items" | cut -d "/" -f 3- | xargs -P 10 -I {} touch $(DATA_PATH)/"{}"
 	@echo "done"

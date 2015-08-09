@@ -26,5 +26,6 @@ var/
 *.db*
 .idea/
 
-/test/database
-/test/library
+test/database
+test/library
+test/posters
