@@ -51,9 +51,6 @@ class Library(object):
         if movie.exist and movie.matched:  # Movie might be in the database but it might be absent in the filesystem
             self.effective_size += movie.size
 
-    def get_library(self):
-        return self.library
-
     def __iter__(self):
         for m in self.library:
             yield m
@@ -67,7 +64,8 @@ class Movie(object):
     """
     _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
     _jacket_path = "{0}/{1}.bundle/Contents/_stored/{2}"
-    _default_jacket = "thumb1"
+    # TODO: Validate if not too generic
+    _agent_prefix = "com.plexapp.agents"
 
     def __init__(self, title, absolute_file, year, size, fps, guid, jacket):
         self.filepath = os.path.dirname(absolute_file)
@@ -81,11 +79,11 @@ class Movie(object):
         self.size = size
         self.fps = fps
         self.exist = os.path.exists(absolute_file)
-        self.matched = self._default_jacket not in jacket
+        self.matched = self._agent_prefix in jacket
 
         if self.matched:
             h = hashlib.sha1(guid).hexdigest()
-            self.jacket = os.path.join(self._metadata_path, self._jacket_path.format(h[0], h[1], jacket[11:]))
+            self.jacket = os.path.join(self._metadata_path, self._jacket_path.format(h[0], h[1:], jacket[11:]))
 
     def _clean_filename(self, replacements=None):
         if not replacements:
@@ -106,11 +104,11 @@ class Movie(object):
     def get_correct_path(self):
         return os.path.join(self.get_correct_directory(), self.get_correct_filename())
 
-    def get_correct_absolute_path(self, parent=None):  # parent is for move the file to a new location
-        if not parent:
+    def get_correct_absolute_path(self, override=None):  # parent is for move the file to a new location
+        if not override:
             return os.path.join(self.filepath, self.get_correct_path())
 
-        return os.path.join(parent, self.get_correct_path())
+        return os.path.join(override, self.get_correct_path())
 
     def get_metadata_jacket(self):
         if not self.matched:
