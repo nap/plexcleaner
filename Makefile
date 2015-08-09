@@ -1,6 +1,7 @@
 DATA_PATH ?= test
 DB_SQL ?= etc
 DB_NAME ?= com.plexapp.plugins.library.db
+PWD = $(shell pwd)
 
 all: build
 
@@ -42,11 +43,13 @@ clean:
 	@echo "done"
 
 files:
+	@echo
+	@echo "Library in: $(PWD)/$(DATA_PATH)/library"
 	@printf "Update test data with new file location: "
 	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT file FROM media_parts" | xargs -I {} basename "{}" | xargs -I {} touch $(DATA_PATH)/library/"{}"
 	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT id, file FROM media_parts" | \
 	awk -F "|" '{printf $$1 " " $$2 "\n"}' | \
 	while read ID FILE; do \
-		env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "UPDATE media_parts SET file = '$(DATA_PATH)/library/$$(basename "$$FILE")' WHERE id = $$ID"; \
+		env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "UPDATE media_parts SET file = '$(PWD)/$(DATA_PATH)/library/$$(basename "$$FILE")' WHERE id = $$ID"; \
 	done
 	@echo "done"
