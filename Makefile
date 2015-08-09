@@ -47,6 +47,6 @@ files:
 	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT id, file FROM media_parts" | \
 	awk -F "|" '{printf $$1 " " $$2 "\n"}' | \
 	while read ID FILE; do \
-		sqlite3 $(DATA_PATH)/database/$(DB_NAME) "UPDATE media_parts SET file = '$(DATA_PATH)/library/$$(basename "$$FILE")' WHERE id = $$ID"; \
+		env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "UPDATE media_parts SET file = '$(DATA_PATH)/library/$$(basename "$$FILE")' WHERE id = $$ID"; \
 	done
 	@echo "done"
