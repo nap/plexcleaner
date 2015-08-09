@@ -8,14 +8,16 @@ plex_home = {
     'help': 'Installation location of the Plex Media Server.'
 }
 
-new_library = {
+export = {
     'type': click.Path(exists=True, file_okay=True, dir_okay=True, writable=True, readable=True, resolve_path=True),
-    'help': 'Consolidate the updated library in a new folder.'
+    'default': None,
+    'help': 'Move the updated library format in a new folder.'
 }
 
 update = {
     'type': click.BOOL,
     'default': True,
+    'is_flag': True,
     'help': 'Update Plex database with renamed and moved media.'
 }
 
@@ -27,12 +29,13 @@ jacket = {
 
 database_override = {
     'type': click.Path(exists=True, dir_okay=True, readable=True, resolve_path=True),
+    'default': None,
     'help': 'Override the expected Plex Database location.'
 }
 
 log_level = {
     'type': click.Choice(['DEBUG', 'INFO', 'WARNING', 'CRITICAL', 'ERROR']),
-    'default': 'DEBUG',
+    'default': 'INFO',
     'help': 'Application verbosity, default is INFO'
 }
 
@@ -41,11 +44,4 @@ interrupt = {
     'default': False,
     'is_flag': True,
     'help': 'Interrupt the whole process if a movie file is not found on the filesystem.'
-}
-
-export = {
-    'type': click.BOOL,
-    'default': False,
-    'is_flag': True,
-    'help': 'Should the tool move to the new library.'
 }
