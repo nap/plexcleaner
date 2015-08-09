@@ -15,7 +15,8 @@ install:
     - make
 script:
     - pep8 plexcleaner/* test/* --ignore E501
-    - py.test test/test_media.py
-    - coverage run --source=plexcleaner test/test_media.py
+    - py.test
+    - coverage run test/test_media_library.py
+    - coverage run test/test_media_movie.py
 after_success:
     - coveralls
