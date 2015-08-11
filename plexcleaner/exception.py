@@ -15,3 +15,7 @@ class PlexDatabaseException(PlexCleanerException):
 
 class PlexMediaFileException(PlexCleanerException):
     pass
+
+
+class PlexOSException(PlexCleanerException):
+    pass
