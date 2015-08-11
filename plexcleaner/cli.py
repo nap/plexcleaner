@@ -15,7 +15,6 @@ export = {
 }
 
 update = {
-    'type': click.BOOL,
     'default': True,
     'is_flag': True,
     'help': 'Update Plex database with renamed and moved media.'
