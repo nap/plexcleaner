@@ -29,6 +29,7 @@ class Library(object):
 
         self.library = []
         self.effective_size = 0
+        self.has_missing_file = False
 
         database = os.path.join(metadata_home, self._database_path, database_name)
         try:
@@ -50,6 +51,9 @@ class Library(object):
 
         if movie.exist and movie.matched:  # Movie might be in the database but it might be absent in the filesystem
             self.effective_size += movie.size
+
+        if not movie.exist:
+            self.has_missing_file = True
 
     def __iter__(self):
         for m in self.library:
