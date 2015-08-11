@@ -7,6 +7,7 @@ import json
 from pyjarowinkler import distance
 
 from exception import PlexDatabaseException
+from plexcleaner import LOG
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
@@ -54,6 +55,7 @@ class Library(object):
 
         if not movie.exist:
             self.has_missing_file = True
+            LOG.warning("The file {0} is missing".format(movie.original_file))
 
     def __iter__(self):
         for m in self.library:
@@ -71,9 +73,10 @@ class Movie(object):
     # TODO: Validate if not too generic
     _agent_prefix = "com.plexapp.agents"
 
-    def __init__(self, title, absolute_file, year, size, fps, guid, jacket):
-        self.filepath = os.path.dirname(absolute_file)
-        self.filename, self.file_ext = os.path.splitext(os.path.basename(absolute_file))
+    def __init__(self, title, original_file, year, size, fps, guid, jacket):
+        self.original_file = original_file
+        self.filepath = os.path.dirname(original_file)
+        self.filename, self.file_ext = os.path.splitext(os.path.basename(original_file))
 
         self.title = title
         self.correct_title = self._clean_filename()
@@ -82,7 +85,7 @@ class Movie(object):
         self.year = year
         self.size = size
         self.fps = fps
-        self.exist = os.path.exists(absolute_file)
+        self.exist = os.path.exists(original_file)
         self.matched = self._agent_prefix in jacket
 
         if self.matched:
