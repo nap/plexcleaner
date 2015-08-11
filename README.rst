@@ -24,7 +24,7 @@ Help
                                       Server.
       --export PATH                   Move the updated library format in a new
                                       folder.
-      --update                        Update Plex database with renamed and moved
+      --update / --no-update          Update Plex database with renamed and moved
                                       media.
       --jacket TEXT                   Name that each movie jacket will have.
       --interrupt                     Interrupt the whole process if a movie file
