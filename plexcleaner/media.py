@@ -13,6 +13,7 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class Library(object):
+    _B_TO_GB = 1.0e-9
     _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
     # TODO: Figureout what media_items.deleted_at implies
     _select_movies = (
@@ -43,6 +44,8 @@ class Library(object):
                 for row in cursor.execute(''.join(self._select_movies)):
                     movie = Movie(*row)
                     self._update_library(movie)
+
+                LOG.info("Library size is {0:0.2f} Gb".format(self.effective_size * self._B_TO_GB))
 
         except sqlite3.OperationalError:
             raise PlexDatabaseException("Could not connect to Plex database: {0}".format(database))
