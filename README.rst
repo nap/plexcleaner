@@ -3,7 +3,7 @@ PlexCleaner
 .. image:: https://travis-ci.org/nap/plexcleaner.svg?branch=master
     :target: https://travis-ci.org/nap/plexcleaner
 .. image:: https://coveralls.io/repos/nap/plexcleaner/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/nap/plexcleaner?branch=master
+  :target: https://coveralls.io/github/nap/plexcleaner?branch=master
 
 **Require python >= 2.7**
 
