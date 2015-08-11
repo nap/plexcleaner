@@ -72,6 +72,7 @@ class TestMediaMovie(unittest.TestCase):
         self.assertTrue('exist' in json_dict)
         self.assertTrue('filename' in json_dict)
         self.assertTrue('jacket' in json_dict)
+        self.assertTrue('original_file' in json_dict)
 
 if __name__ == '__main__':
     unittest.main()
