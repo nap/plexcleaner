@@ -76,8 +76,15 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
 
         for movie in library:
             LOG.info(u"Processing: '{0}'".format(movie.basename))
-            # TODO: shutil.move() for movie and jacket
-            # TODO: Update database
+            if movie.matched:
+                # TODO: Create well formated directory or skip if exist
+                # TODO: Copy Jacket  or skip if exist
+                # TODO: shutil.move() movie  or skip if exist
+                # TODO: Update database if move successful
+                # TODO: rm dir+jacket if not successful
+
+            else:
+                LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
 
     except PlexDatabaseException as de:
         print de.message
