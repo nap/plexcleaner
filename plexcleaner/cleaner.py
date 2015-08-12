@@ -77,6 +77,7 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
         for movie in library:
             LOG.info(u"Processing: '{0}'".format(movie.basename))
             if movie.matched:
+                pass
                 # TODO: Create well formated directory or skip if exist
                 # TODO: Copy Jacket  or skip if exist
                 # TODO: shutil.move() movie  or skip if exist
