@@ -16,8 +16,7 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 def get_free_fs_space(export):
     statvfs = os.statvfs(export)
-    avail_size = statvfs.f_frsize * statvfs.f_bavail
-    return avail_size * 1024
+    return statvfs.f_frsize * statvfs.f_bavail * 1024
 
 
 def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
