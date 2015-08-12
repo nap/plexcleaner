@@ -79,7 +79,8 @@ class Movie(object):
     def __init__(self, title, original_file, year, size, fps, guid, jacket):
         self.original_file = original_file
         self.filepath = os.path.dirname(original_file)
-        self.filename, self.file_ext = os.path.splitext(os.path.basename(original_file))
+        self.basename = os.path.basename(original_file)
+        self.filename, self.file_ext = os.path.splitext(self.basename)
 
         self.title = title
         self.correct_title = self._clean_filename()
