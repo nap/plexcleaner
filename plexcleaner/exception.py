@@ -4,8 +4,8 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class PlexCleanerException(Exception):
-    def __init__(self, message):
-        super(Exception, self).__init__(message)
+    def __init__(self, message, **kwargs):
+        super(Exception, self).__init__(message, **kwargs)
         LOG.debug(message)
 
 
