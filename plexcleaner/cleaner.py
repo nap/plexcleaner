@@ -2,9 +2,9 @@ import sys
 import click
 import logging
 import os
-import shutil
 import signal
 import errno
+import shutil
 
 import cli
 from plexcleaner import LOG
@@ -76,7 +76,7 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
 
         for movie in library:
             LOG.info(u"Processing: '{0}'".format(movie.basename))
-            # TODO: Multiprocess shutil.move() for movie and jacket
+            # TODO: shutil.move() for movie and jacket
             # TODO: Update database
 
     except PlexDatabaseException as de:
