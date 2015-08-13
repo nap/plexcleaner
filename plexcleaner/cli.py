@@ -1,4 +1,5 @@
 import click
+from plexcleaner import log_severity
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
@@ -33,8 +34,8 @@ database_override = {
 }
 
 log_level = {
-    'type': click.Choice(['DEBUG', 'INFO', 'WARNING', 'CRITICAL', 'ERROR']),
-    'default': 'INFO',
+    'type': click.Choice(log_severity),
+    'default': 'info',
     'help': 'Application verbosity, default is INFO'
 }
 
