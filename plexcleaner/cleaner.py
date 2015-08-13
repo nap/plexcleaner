@@ -8,7 +8,7 @@ import shutil
 
 import cli
 from plexcleaner import LOG
-from exception import PlexCleanerException, PlexDatabaseException, PlexMediaFileException, PlexOSException
+from exception import PlexCleanerException
 from media import Library
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
@@ -33,7 +33,7 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
             return True  # The process does not have permission to send the signal to any of the target processes
 
         else:
-            raise PlexOSException('Unable to validate if Plex is running')
+            raise PlexCleanerException('Unable to validate if Plex is running')
 
     except IOError:
         return False
@@ -57,22 +57,23 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
         library = Library(metadata_home=plex_home, database_override=database_override)
 
         if not len(library):
-            raise PlexCleanerException("Library is empty.")
+            raise PlexCleanerException("Library is empty.", severity=logging.WARNING)
 
         if library.has_missing_file and interrupt:
-            raise PlexMediaFileException('Missing media file on the filesystem')
+            raise PlexCleanerException('Missing media file on the filesystem', severity=logging.WARNING)
 
         if export:
             LOG.info("Will consolidate library in: '{0}'".format(export))
 
             free_space = get_free_fs_space(export)
             if library.effective_size > free_space:
-                LOG.critical('Not enough space: {0} Bytes > {1} Bytes'.format(library.effective_size, free_space))
-                raise PlexOSException('Remaining space on the target filesystem is not enough to export the library')
+                raise PlexCleanerException('Remaining space on the target filesystem is not enough to export the '
+                                           'library {0} Bytes > {1} Bytes'.format(library.effective_size, free_space),
+                                           severity=logging.CRITICAL)
 
         if update and is_plex_running():
             LOG.critical('Cannot update media file location if Plex is running')
-            raise PlexOSException('Should not update database if Plex is running')
+            raise PlexCleanerException('Should not update database if Plex is running')
 
         for movie in library:
             LOG.info(u"Processing: '{0}'".format(movie.basename))
@@ -86,15 +87,6 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
 
             else:
                 LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
-
-    except PlexDatabaseException as de:
-        print de.message
-
-    except PlexMediaFileException as fe:
-        print fe.message
-
-    except PlexOSException as oe:
-        print oe.message
 
     except PlexCleanerException as ce:
         print ce.message
