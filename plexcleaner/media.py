@@ -19,7 +19,7 @@ class Library(object):
     _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
     # TODO: Figureout what media_items.deleted_at implies
     _select_movies = (
-        'SELECT metadata_items.title, media_parts.file, metadata_items.year, ',
+        'SELECT media_parts.id, metadata_items.title, media_parts.file, metadata_items.year, ',
         'media_parts.size, media_items.frames_per_second AS fps, '
         'metadata_items.guid, metadata_items.user_thumb_url AS jacket FROM media_items ',
         'JOIN metadata_items ON media_items.metadata_item_id = metadata_items.id ',
@@ -79,7 +79,8 @@ class Movie(object):
     # TODO: Validate if not too generic
     _agent_prefix = "com.plexapp.agents"
 
-    def __init__(self, title, original_file, year, size, fps, guid, jacket):
+    def __init__(self, id, title, original_file, year, size, fps, guid, jacket):
+        self.id = id
         self.original_file = original_file
         self.filepath = os.path.dirname(original_file)
         self.basename = os.path.basename(original_file)
