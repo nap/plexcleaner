@@ -10,4 +10,10 @@ log_config = {
 }
 logging.basicConfig(**log_config)
 
-log_severity = ['debug', 'info', 'warning', 'critical', 'error']
+log_severity = {
+    10: 'debug',
+    20: 'info',
+    30: 'warning',
+    50: 'critical',
+    40: 'error'
+}
