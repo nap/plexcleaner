@@ -9,3 +9,5 @@ log_config = {
     'level': logging.DEBUG
 }
 logging.basicConfig(**log_config)
+
+log_severity = ['debug', 'info', 'warning', 'critical', 'error']
