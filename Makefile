@@ -38,7 +38,7 @@ data: media_items.data media_part.data metadata_items.data
 
 clean:
 	@printf "Cleaning old test data: "
-	@rm -f $(DATA_PATH)/database/* $(DATA_PATH)/library/* $(DATA_PATH)/posters/*
+	@rm -Rf $(DATA_PATH)/database $(DATA_PATH)/library $(DATA_PATH)/posters
 	@mkdir $(DATA_PATH)/database $(DATA_PATH)/library $(DATA_PATH)/posters
 	@echo "done"
 
