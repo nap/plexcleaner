@@ -18,6 +18,7 @@ class Library(object):
     _B_TO_GB = 9.3132257461547852e-10
     _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
     # TODO: Figureout what media_items.deleted_at implies
+    _update_movie = "UPDATE media_parts SET media_parts.file = '{0}' WHERE media_parts.id = '{1}'"
     _select_movies = (
         'SELECT media_parts.id, metadata_items.title, media_parts.file, metadata_items.year, ',
         'media_parts.size, media_items.frames_per_second AS fps, '
