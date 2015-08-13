@@ -131,11 +131,11 @@ class Movie(object):
 
         return os.path.join(override, directory)
 
-    def get_metadata_jacket(self):
+    def get_metadata_jacket(self, metadata_home='/var/lib/plexmediaserver'):
         if not self.matched:
             return None
 
-        return os.path.join(self._metadata_path, self.jacket)
+        return os.path.join(metadata_home, self._metadata_path, self.jacket)
 
     def __str__(self):
         serialized = dict()
