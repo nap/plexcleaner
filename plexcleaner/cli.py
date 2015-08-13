@@ -34,7 +34,7 @@ database_override = {
 }
 
 log_level = {
-    'type': click.Choice(log_severity),
+    'type': click.Choice(log_severity.values()),
     'default': 'info',
     'help': 'Application verbosity, default is INFO'
 }
