@@ -118,11 +118,18 @@ class Movie(object):
     def get_correct_path(self):
         return os.path.join(self.get_correct_directory(), self.get_correct_filename())
 
-    def get_correct_absolute_path(self, override=None):  # parent is for move the file to a new location
+    def get_correct_absolute_file(self, override=None):  # parent is for move the file to a new location
         if not override:
             return os.path.join(self.filepath, self.get_correct_path())
 
         return os.path.join(override, self.get_correct_path())
+
+    def get_correct_absolute_path(self, override=None):
+        directory = "{0} ({1})".format(self.correct_title, self.year)
+        if not override:
+            return os.path.join(self.filepath, directory)
+
+        return os.path.join(override, directory)
 
     def get_metadata_jacket(self):
         if not self.matched:
