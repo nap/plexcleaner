@@ -1,7 +1,7 @@
 import unittest
 import os
 from plexcleaner.media import Library, Movie
-from plexcleaner.exception import PlexDatabaseException
+from plexcleaner.exception import PlexCleanerException
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
@@ -21,7 +21,7 @@ class TestMediaLibrary(unittest.TestCase):
         self.assertEqual(len(library), self._nb_movie + 1)
 
     def test_database_exception(self):
-        with self.assertRaises(PlexDatabaseException) as e:
+        with self.assertRaises(PlexCleanerException) as e:
             library = Library(database_override='database/some.bad.db.name')
         self.assertTrue('Could not connect' in e.exception.message)
 
