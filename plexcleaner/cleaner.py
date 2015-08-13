@@ -73,15 +73,20 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
 
         if update and is_plex_running():
             LOG.critical('Cannot update media file location if Plex is running')
-            raise PlexCleanerException('Should not update database if Plex is running')
+            raise PlexCleanerException('Should not update database if Plex is running', severity=logging.ERROR)
 
         for movie in library:
             LOG.info(u"Processing: '{0}'".format(movie.basename))
             if movie.matched:
-                pass
-                # TODO: Create well formated directory or skip if exist
-                # TODO: Copy Jacket  or skip if exist
-                # TODO: shutil.move() movie  or skip if exist
+
+                # Create well formatted directory or skip if exist
+                os.mkdir(movie.get_correct_absolute_path(override=export))
+                # Copy Jacket, skip if exist
+                test = os.path.join('./test/posters', os.path.basename(movie.get_metadata_jacket()))  # FOR TESTING
+                shutil.copy(test, os.path.join(movie.get_correct_absolute_path(override=export), jacket))
+                # movie or skip if exist
+                shutil.move(movie.original_file, movie.get_correct_absolute_file(override=export))
+
                 # TODO: Update database if move successful
                 # TODO: rm dir+jacket if not successful
 
