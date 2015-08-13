@@ -52,11 +52,11 @@ class TestMediaMovie(unittest.TestCase):
 
     def test_get_correct_absolute_path(self):
         movie = Movie(u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
-        self.assertEqual(movie.get_correct_absolute_path(), "/test/a (2010)/a (2010).avi")
+        self.assertEqual(movie.get_correct_absolute_file(), "/test/a (2010)/a (2010).avi")
 
     def test_get_correct_absolute_path_with_override(self):
         movie = Movie(u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
-        self.assertEqual(movie.get_correct_absolute_path(override='/temp'), "/temp/a (2010)/a (2010).avi")
+        self.assertEqual(movie.get_correct_absolute_file(override='/temp'), "/temp/a (2010)/a (2010).avi")
 
     def test_str(self):
         movie = Movie(u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
