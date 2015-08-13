@@ -22,7 +22,7 @@ class TestMediaLibrary(unittest.TestCase):
 
     def test_database_exception(self):
         with self.assertRaises(PlexCleanerException) as e:
-            library = Library(database_override='database/some.bad.db.name')
+            library = Library(database_override='database/some.bad.name.db')
         self.assertTrue('Could not connect' in e.exception.message)
 
     def test_effective_size(self):
