@@ -4,9 +4,11 @@ import sqlite3
 import os
 import hashlib
 import json
+import logging
+
 from pyjarowinkler import distance
 
-from exception import PlexDatabaseException
+from exception import PlexCleanerException
 from plexcleaner import LOG
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
@@ -48,7 +50,8 @@ class Library(object):
                 LOG.info("Library size is {0:0.3f} gigabyte".format(self.effective_size * self._B_TO_GB))
 
         except sqlite3.OperationalError:
-            raise PlexDatabaseException("Could not connect to Plex database: {0}".format(database))
+            raise PlexCleanerException("Could not connect to Plex database: {0}".format(database),
+                                       severity=logging.WARNING)
 
     def _update_library(self, movie):
         self.library.append(movie)
