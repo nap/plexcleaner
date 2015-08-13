@@ -86,7 +86,9 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                 shutil.copy(test, os.path.join(movie.get_correct_absolute_path(override=export), jacket))
                 # movie or skip if exist
                 shutil.move(movie.original_file, movie.get_correct_absolute_file(override=export))
-
+                # TODO: Handle unicode
+                # TODO: Exceptions
+                # TODO: replace line 85
                 # TODO: Update database if move successful
                 # TODO: rm dir+jacket if not successful
 
