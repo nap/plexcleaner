@@ -1,14 +1,12 @@
 import unicodedata
 import string
-import sqlite3
 import os
 import hashlib
 import json
-import logging
 
 from pyjarowinkler import distance
 
-from exception import PlexCleanerException
+import database
 from plexcleaner import LOG
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
@@ -16,43 +14,18 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 class Library(object):
     _B_TO_GB = 9.3132257461547852e-10
-    _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
     # TODO: Figureout what media_items.deleted_at implies
-    _update_movie = "UPDATE media_parts SET media_parts.file = '{0}' WHERE media_parts.id = '{1}'"
-    _select_movies = (
-        'SELECT media_parts.id, metadata_items.title, media_parts.file, metadata_items.year, ',
-        'media_parts.size, media_items.frames_per_second AS fps, '
-        'metadata_items.guid, metadata_items.user_thumb_url AS jacket FROM media_items ',
-        'JOIN metadata_items ON media_items.metadata_item_id = metadata_items.id ',
-        'JOIN media_parts ON media_parts.media_item_id = media_items.id'
-    )
 
-    def __init__(self,
-                 database_name='com.plexapp.plugins.library.db',
-                 metadata_home='/var/lib/plexmediaserver',
-                 database_override=None):   # TODO: Rmove! this does not belong here
-
+    def __init__(self, db):
         self.library = []
         self.effective_size = 0
         self.has_missing_file = False
 
-        database = os.path.join(metadata_home, self._database_path, database_name)
-        try:
-            if database_override:  # TODO: Rmove! this does not belong here
-                database = database_override
+        for row in db.get_rows():
+            movie = Movie(*row)
+            self._update_library(movie)
 
-            with sqlite3.connect(database) as conn:  # TODO: Create reusable object that yield result row
-                cursor = conn.cursor()
-
-                for row in cursor.execute(''.join(self._select_movies)):
-                    movie = Movie(*row)
-                    self._update_library(movie)
-
-                LOG.info("Library size is {0:0.3f} gigabyte".format(self.effective_size * self._B_TO_GB))
-
-        except sqlite3.OperationalError:
-            raise PlexCleanerException("Could not connect to Plex database: {0}".format(database),
-                                       severity=logging.WARNING)
+        LOG.info("Library size is {0:0.3f} gigabyte".format(self.effective_size * self._B_TO_GB))
 
     def _update_library(self, movie):
         self.library.append(movie)
@@ -80,8 +53,8 @@ class Movie(object):
     # TODO: Validate if not too generic
     _agent_prefix = "com.plexapp.agents"
 
-    def __init__(self, id, title, original_file, year, size, fps, guid, jacket):
-        self.id = id
+    def __init__(self, mid, title, original_file, year, size, fps, guid, jacket):
+        self.mid = mid
         self.original_file = original_file
         self.filepath = os.path.dirname(original_file)
         self.basename = os.path.basename(original_file)
