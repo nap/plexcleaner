@@ -30,7 +30,7 @@ class Library(object):
     def __init__(self,
                  database_name='com.plexapp.plugins.library.db',
                  metadata_home='/var/lib/plexmediaserver',
-                 database_override=None):
+                 database_override=None):   # TODO: Rmove! this does not belong here
 
         self.library = []
         self.effective_size = 0
@@ -38,10 +38,10 @@ class Library(object):
 
         database = os.path.join(metadata_home, self._database_path, database_name)
         try:
-            if database_override:
+            if database_override:  # TODO: Rmove! this does not belong here
                 database = database_override
 
-            with sqlite3.connect(database) as conn:
+            with sqlite3.connect(database) as conn:  # TODO: Create reusable object that yield result row
                 cursor = conn.cursor()
 
                 for row in cursor.execute(''.join(self._select_movies)):
