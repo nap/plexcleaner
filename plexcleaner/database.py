@@ -1,7 +1,7 @@
 import sqlite3
 import os
 import logging
-from plexcleaner import LOG
+
 from exception import PlexCleanerException
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
@@ -18,6 +18,7 @@ class Database(object):
         'JOIN media_parts ON media_parts.media_item_id = media_items.id'
     )
 
+    # TODO: add logging
     def __init__(self, metadata_home='/var/lib/plexmediaserver',
                  database_override=None, database_name='com.plexapp.plugins.library.db'):
         database = os.path.join(metadata_home, self._database_path, database_name)
