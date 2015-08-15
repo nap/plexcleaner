@@ -42,6 +42,20 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
         return True
 
 
+def move_media(src, dst):
+    if os.path.exists(dst):
+        LOG.info("File {0} already exist, will rename/override.")
+
+    shutil.move(src, dst)
+
+
+def copy_jacket(src, dst):
+    if os.path.exists(dst):
+        LOG.info("Jacket {0} already exist, will rename/override.")
+
+    shutil.copy(src, dst)
+
+
 @click.command()
 @click.option('--plex-home', **cli.plex_home)
 @click.option('--export', **cli.export)
@@ -83,9 +97,8 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                 os.mkdir(movie.get_correct_absolute_path(override=export))
                 # Copy Jacket, skip if exist
                 test = os.path.join('./test/posters', os.path.basename(movie.get_metadata_jacket()))  # FOR TESTING
-                shutil.copy(test, os.path.join(movie.get_correct_absolute_path(override=export), jacket))
-                # movie or skip if exist
-                shutil.move(movie.original_file, movie.get_correct_absolute_file(override=export))
+                copy_jacket(test, os.path.join(movie.get_correct_absolute_path(override=export), jacket))
+                move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
                 # TODO: Handle unicode
                 # TODO: Exceptions
                 # TODO: replace line 85
