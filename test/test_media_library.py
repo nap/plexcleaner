@@ -1,8 +1,7 @@
 import unittest
 import os
-import database
+import plexcleaner.database as database
 from plexcleaner.media import Library, Movie
-from plexcleaner.exception import PlexCleanerException
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
