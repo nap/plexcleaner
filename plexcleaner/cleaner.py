@@ -123,7 +123,7 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                     move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
                     update_database(movie.id, movie.get_correct_absolute_file(override=export))
 
-                except Exception:
+                except Exception:  # TODO: Validate exception case
                     # TODO: log...
                     clean_dir(movie.get_correct_absolute_path(override=export))
                     pass
