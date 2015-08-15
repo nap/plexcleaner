@@ -6,10 +6,11 @@ import signal
 import errno
 import shutil
 
-import cli
 from plexcleaner import LOG
 from exception import PlexCleanerException
 from media import Library
+import cli
+import database
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
@@ -89,9 +90,9 @@ def update_database(id, dst):
 @click.option('--database-override', **cli.database_override)
 def main(plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
     LOG.setLevel(logging.getLevelName(log_level.upper()))
-
     try:
-        library = Library(metadata_home=plex_home, database_override=database_override)
+        db = database.Database(metadata_home=plex_home, database_override=database_override)
+        library = Library(db)
 
         if not len(library):
             raise PlexCleanerException("Library is empty.", severity=logging.WARNING)
