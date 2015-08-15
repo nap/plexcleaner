@@ -43,17 +43,40 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
 
 
 def move_media(src, dst):
-    if os.path.exists(dst):
-        LOG.info("File {0} already exist, will rename/override.")
+    # TODO: Handle unicode
+    # TODO: Exceptions
+    if not os.path.exists(dst):
+        shutil.move(src, dst)
 
-    shutil.move(src, dst)
+    LOG.info("File {0} already exist, will rename/override.")
 
 
-def copy_jacket(src, dst):
-    if os.path.exists(dst):
-        LOG.info("Jacket {0} already exist, will rename/override.")
+def copy_jacket(src, dst, skip):
+    if not os.path.exists(dst) and not skip:
+        shutil.copy(src, dst)
 
-    shutil.copy(src, dst)
+    LOG.info("Jacket {0} already exist, skip.")
+
+
+def create_dir(dst):
+    # TODO: Handle unicode
+    # TODO: Exceptions
+    if not os.path.isdir(dst):
+        os.mkdir(dst)
+
+    LOG.info("Directory {0} already exist, skip.")
+
+
+def clean_dir(dst):
+    # TODO: rm dir+jacket if not successful
+    # Make sure we don't delete a media file if it was moved
+    pass
+
+
+def update_database(id, dst):
+    # TODO: Get database instance
+    # TODO: Update row id with dst value
+    pass
 
 
 @click.command()
@@ -64,7 +87,7 @@ def copy_jacket(src, dst):
 @click.option('--interrupt', **cli.interrupt)
 @click.option('--log-level', **cli.log_level)
 @click.option('--database-override', **cli.database_override)
-def main(plex_home, export, update, jacket, interrupt, log_level, database_override):
+def main(plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
     LOG.setLevel(logging.getLevelName(log_level.upper()))
 
     try:
@@ -92,19 +115,18 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
         for movie in library:
             LOG.info(u"Processing: '{0}'".format(movie.basename))
             if movie.matched:
+                try:
+                    create_dir(movie.get_correct_absolute_path(override=export))
+                    # TODO: Delete following line
+                    test = os.path.join('./test/posters', os.path.basename(movie.get_metadata_jacket()))  # FOR TESTING
+                    copy_jacket(test, os.path.join(movie.get_correct_absolute_path(override=export), jacket), skip_jacket)
+                    move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
+                    update_database(movie.id, movie.get_correct_absolute_file(override=export))
 
-                # Create well formatted directory or skip if exist
-                os.mkdir(movie.get_correct_absolute_path(override=export))
-                # Copy Jacket, skip if exist
-                test = os.path.join('./test/posters', os.path.basename(movie.get_metadata_jacket()))  # FOR TESTING
-                copy_jacket(test, os.path.join(movie.get_correct_absolute_path(override=export), jacket))
-                move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
-                # TODO: Handle unicode
-                # TODO: Exceptions
-                # TODO: replace line 85
-                # TODO: Update database if move successful
-                # TODO: rm dir+jacket if not successful
-
+                except Exception:
+                    # TODO: log...
+                    clean_dir(movie.get_correct_absolute_path(override=export))
+                    pass
             else:
                 LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
 
