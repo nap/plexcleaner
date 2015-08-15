@@ -1,9 +1,7 @@
 Implement proper unit test
-Implement inplace copy
-Update PlexDatabase with new location for media
-Update README.rst
 Implement proper logging
 Implement proper error exception
+Update README.rst
 Generate HTML report of file copied/moved/deleted/untouched
 Attempt to match unmatched media
  - Integrate with https://github.com/wackou/guessit
