@@ -11,7 +11,7 @@ class TestMediaLibrary(unittest.TestCase):
     _effective_size = 100275991932
 
     def setUp(self):
-        self.db = database.Database()
+        self.db = database.Database(database_override='./test/database/com.plexapp.plugins.library.db')
 
     def test_init(self):
         library = Library(self.db)
