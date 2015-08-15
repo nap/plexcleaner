@@ -6,7 +6,6 @@ import json
 
 from pyjarowinkler import distance
 
-import database
 from plexcleaner import LOG
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
