@@ -45,3 +45,6 @@ class TestDatabase(unittest.TestCase):
         db.rollback()
         row = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (1,)).fetchone()
         self.assertEqual(row[0], '/test/fail')
+
+if __name__ == '__main__':
+    unittest.main()
