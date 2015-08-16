@@ -9,7 +9,7 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 class Database(object):
     _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
-    _update_movie = "UPDATE media_parts SET media_parts.file = ? WHERE media_parts.id = ?"
+    _update_movie = 'UPDATE media_parts SET file = ? WHERE id = ?'
     _select_movies = (
         'SELECT media_parts.id, metadata_items.title, media_parts.file, metadata_items.year, ',
         'media_parts.size, media_items.frames_per_second AS fps, '
@@ -27,6 +27,7 @@ class Database(object):
                 database = database_override
 
             with sqlite3.connect(database) as conn:
+                self._connection = conn
                 self._cursor = conn.cursor()
 
         except sqlite3.OperationalError:
@@ -37,7 +38,14 @@ class Database(object):
         return self._cursor.execute(''.join(self._select_movies))
 
     def update_row(self, mid, value):
-        self._cursor.execute(self._update_movie, (mid, value))
+        self._cursor.execute(self._update_movie, (value, mid))
 
     def update_many_row(self, values):
         self._cursor.executemany(self._update_movie, values)
+        self.commit()
+
+    def commit(self):
+        self._connection.commit()
+
+    def rollback(self):
+        self._connection.rollback()
