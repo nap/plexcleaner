@@ -35,4 +35,3 @@ class TestDatabase(unittest.TestCase):
         db = self.get_db()
         rows = db._cursor.execute('SELECT file FROM media_parts').fetchall()
         self.assertEqual(len(rows), 3)
-
