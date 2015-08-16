@@ -22,11 +22,6 @@ class TestMediaLibrary(unittest.TestCase):
         library._update_library(movie)
         self.assertEqual(len(library), self._nb_movie + 1)
 
-    # def test_database_exception(self):
-    #     with self.assertRaises(PlexCleanerException) as e:
-    #         library = Library(self.db)
-    #     self.assertTrue('Could not connect' in e.exception.message)
-
     def test_effective_size(self):
         db = database.Database(database_override='./test/database/com.plexapp.plugins.library.db')
         library = Library(db)
