@@ -9,9 +9,9 @@ class TestDatabase(unittest.TestCase):
     def get_db(self):
         db = Database(database_override=':memory:')
         db._cursor.execute('CREATE TABLE media_parts(id, file)')
-        db._cursor.executemany('INSERT INTO media_parts (id, file) VALUES (?, ?)', [(1, '/test/fail'),
-                                                                                    (2, '/test/fail'),
-                                                                                    (3, '/test/fail')])
+        db._cursor.executemany('INSERT INTO media_parts(id, file) VALUES (?, ?)', [(1, '/test/fail'),
+                                                                                   (2, '/test/fail'),
+                                                                                   (3, '/test/fail')])
         return db
 
     def test_database_exception(self):
@@ -32,6 +32,6 @@ class TestDatabase(unittest.TestCase):
             self.assertEqual(row[0], '/test/success')
 
     def test_get_rows(self):
-        db = self.get_db()
-        rows = db._cursor.execute('SELECT file FROM media_parts').fetchall()
-        self.assertEqual(len(rows), 3)
+        db = Database(database_override='./test/database/com.plexapp.plugins.library.db')
+        rows = db.get_rows().fetchall()
+        self.assertEqual(len(rows), 98)
