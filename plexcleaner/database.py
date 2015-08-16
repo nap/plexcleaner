@@ -9,7 +9,7 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 class Database(object):
     _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
-    _update_movie = "UPDATE media_parts SET media_parts.file = '{0}' WHERE media_parts.id = '{1}'"
+    _update_movie = "UPDATE media_parts SET media_parts.file = ? WHERE media_parts.id = ?"
     _select_movies = (
         'SELECT media_parts.id, metadata_items.title, media_parts.file, metadata_items.year, ',
         'media_parts.size, media_items.frames_per_second AS fps, '
@@ -37,4 +37,7 @@ class Database(object):
         return self.cursor.execute(''.join(self._select_movies))
 
     def update_row(self, mid, value):
-        self.cursor.execute(self._update_movie.format(mid, value))
+        self.cursor.execute(self._update_movie, (mid, value))
+
+    def update_many_row(self, values):
+        self.cursor.executemany(self._update_movie, values)
