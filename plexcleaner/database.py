@@ -2,6 +2,7 @@ import sqlite3
 import os
 import logging
 
+from plexcleaner import LOG
 from exception import PlexCleanerException
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
@@ -25,6 +26,7 @@ class Database(object):
         try:
             if database_override:
                 database = database_override
+                LOG.debug("User database override {0}".format(database))
 
             with sqlite3.connect(database) as conn:
                 self._connection = conn
@@ -38,14 +40,18 @@ class Database(object):
         return self._cursor.execute(''.join(self._select_movies))
 
     def update_row(self, mid, value):
+        LOG.debug("Updating movie '{0}' with '{1}'".format(mid, value))
         self._cursor.execute(self._update_movie, (value, mid))
 
     def update_many_row(self, values):
+        LOG.debug("Updating {0} movies".format(len(values)))
         self._cursor.executemany(self._update_movie, values)
         self.commit()
 
     def commit(self):
+        LOG.debug('Commiting last changes to database.')
         self._connection.commit()
 
     def rollback(self):
+        LOG.debug('Rollback last changes to database.')
         self._connection.rollback()
