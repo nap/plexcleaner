@@ -45,25 +45,26 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
 
 def move_media(src, dst):
     # TODO: Exceptions
-    if not os.path.exists(dst):
-        shutil.move(src, dst)
+    LOG.debug("Copy file '{0}'".format(src))
+    if os.path.exists(dst):
+        LOG.info("File '{0}' already exist, will rename/override.".format(src))
 
-    LOG.info("File '{0}' already exist, will rename/override.".format(src))
+    return shutil.move(src, dst)
 
 
 def copy_jacket(src, dst, skip):
-    if not os.path.exists(dst) and not skip:
-        shutil.copy(src, dst)
+    if not os.path.exists(dst) or (skip and os.path.exists(dst)):
+        return shutil.copy(src, dst)
 
-    LOG.info("Jacket '{0}' already exist, skip.".format(src))
+    LOG.info("Jacket '{0}' already exist, skip.".format(dst))
 
 
 def create_dir(dst):
-    # TODO: Exceptions
     if not os.path.isdir(dst):
-        os.mkdir(dst)
+        LOG.info("Creating directory '{0}'.".format(dst))
+        return os.mkdir(dst)
 
-    LOG.info("Directory '{0}' already exist, skip.".format(src))
+    LOG.info("Directory '{0}' already exist, skip.".format(dst))
 
 
 def clean_dir(dst):
