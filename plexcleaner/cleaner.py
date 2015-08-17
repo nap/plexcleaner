@@ -54,8 +54,22 @@ def move_media(src, dst):
         return True
 
     except shutil.Error as e:
-        LOG.error(e)
+        if 'already exists' in e:
+            LOG.warning(e)
+
         return False
+
+    except (IOError, OSError) as oe:
+        if oe.errno == errno.EACCES:
+            LOG.error("Not enough permission to edit: {0}".format(dst))
+
+        elif oe.errno == errno.ENOSPC:
+            LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
+
+        else:
+            LOG.error("Unknown error occurred while moving media to destination: {0}".format(os.path.dirname(dst)))
+
+        raise PlexCleanerException("Media movie error occurred".format(os.path.dirname(dst)), severity=logging.CRITICAL)
 
 
 def copy_jacket(src, dst, skip):
@@ -83,10 +97,7 @@ def copy_jacket(src, dst, skip):
         else:
             LOG.error("Unknown error occurred while copying jacket to destination: {0}".format(os.path.dirname(dst)))
 
-        raise PlexCleanerException("Unknown jacket error occurred".format(os.path.dirname(dst)),
-                                   severity=logging.CRITICAL)
-
-
+        raise PlexCleanerException("Jacket error occurred".format(os.path.dirname(dst)), severity=logging.CRITICAL)
 
 
 def create_dir(dst):
