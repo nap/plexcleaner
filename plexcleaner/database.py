@@ -40,7 +40,8 @@ class Database(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.commit()
+        if self._uncommited:
+            self.commit()
         self._connection.close()
 
     def get_rows(self):
