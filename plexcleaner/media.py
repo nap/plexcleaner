@@ -50,7 +50,6 @@ class Movie(object):
     """
     _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
     _jacket_path = "{0}/{1}.bundle/Contents/_stored/{2}"
-    # TODO: Validate if not too generic
     _agent_prefix = "com.plexapp.agents"
 
     def __init__(self, mid, title, original_file, year, size, fps, guid, jacket):
