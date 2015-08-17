@@ -50,7 +50,6 @@ class Movie(object):
     """
     _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
     _jacket_path = "{0}/{1}.bundle/Contents/_stored/{2}"
-    _agent_prefix = "com.plexapp.agents"
 
     def __init__(self, mid, title, original_file, year, size, fps, guid, jacket):
         self.mid = mid
@@ -67,7 +66,7 @@ class Movie(object):
         self.size = size
         self.fps = fps
         self.exist = os.path.exists(original_file)
-        self.matched = self._agent_prefix in jacket
+        self.matched = not guid.startswith('local://')
 
         if self.matched:
             h = hashlib.sha1(guid).hexdigest()
