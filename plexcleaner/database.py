@@ -29,13 +29,19 @@ class Database(object):
                 database = database_override
                 LOG.debug("User database override {0}".format(database))
 
-            with sqlite3.connect(database) as conn:
-                self._connection = conn
-                self._cursor = conn.cursor()
+            self._connection = sqlite3.connect(database)
+            self._cursor = self._connection.cursor()
 
         except sqlite3.OperationalError:
             raise PlexCleanerException("Could not connect to Plex database: {0}".format(database),
                                        severity=logging.WARNING)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.commit()
+        self._connection.close()
 
     def get_rows(self):
         return self._cursor.execute(''.join(self._select_movies))
