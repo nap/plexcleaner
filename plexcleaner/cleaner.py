@@ -47,24 +47,26 @@ def move_media(src, dst):
     # TODO: Exceptions
     LOG.debug("Copy file '{0}'".format(src))
     if os.path.exists(dst):
-        LOG.info("File '{0}' already exist, will rename/override.".format(src))
+        LOG.info("File '{0}' already exist, will override if not the same file.".format(src))
 
-    return shutil.move(src, dst)
+    shutil.move(src, dst)
 
 
 def copy_jacket(src, dst, skip):
-    if not os.path.exists(dst) or (skip and os.path.exists(dst)):
-        return shutil.copy(src, dst)
+    if os.path.exists(dst) and skip:
+        LOG.info("Jacket '{0}' already exist, skip.".format(dst))
+        return False
 
-    LOG.info("Jacket '{0}' already exist, skip.".format(dst))
+    return shutil.copy(src, dst)
 
 
 def create_dir(dst):
-    if not os.path.isdir(dst):
-        LOG.info("Creating directory '{0}'.".format(dst))
-        return os.mkdir(dst)
+    if os.path.isdir(dst):
+        LOG.info("Directory '{0}' already exist, skip.".format(dst))
+        return False
 
-    LOG.info("Directory '{0}' already exist, skip.".format(dst))
+    LOG.info("Creating directory '{0}'.".format(dst))
+    return os.mkdir(dst)
 
 
 def clean_dir(dst):
@@ -75,7 +77,8 @@ def clean_dir(dst):
 
 def update_database(db, m, should_update=False):
     if not should_update:
-        return None
+        LOG.debug('Skipping movie update')
+        return False
 
     filename = m.get_correct_absolute_file()
     db.update_row(m.id, filename)
@@ -121,12 +124,10 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                 if movie.matched:
                     try:
                         create_dir(movie.get_correct_absolute_path(override=export))
-                        # TODO: Delete following line
-                        test = os.path.join('./test/posters', os.path.basename(movie.get_metadata_jacket()))  # FOR TESTING
-                        copy_jacket(test, os.path.join(movie.get_correct_absolute_path(override=export), jacket), skip_jacket)
+                        copy_jacket(movie.get_metadata_jacket(), os.path.join(movie.get_correct_absolute_path(override=export), jacket), skip_jacket)
                         move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
 
-                        # TODO: Update media_items.hits, will want to commit by batch, not by items
+                        # TODO: Update media_items.hints, will want to commit by batch, not by items
                         update_database(db, movie, should_update=update)
 
                     except Exception:  # TODO: Validate exception case
