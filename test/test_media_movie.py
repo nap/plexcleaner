@@ -17,7 +17,7 @@ class TestMediaMovie(unittest.TestCase):
     def test_init(self):
         movie = Movie(1, u"Burn Notice: The Fall of Sam Axe",
                       os.path.join(self._lib, 'Burn Notice The Fall of Sam Axe.avi'),
-                      2010, 2, 2.2, 'someGUID', 'thumb1')
+                      2010, 2, 2.2, 'local://1', 'thumb1')
         self.assertFalse(movie.matched)
 
         movie = Movie(2, u"Burn Notice: The Fall of Sam Axe",
