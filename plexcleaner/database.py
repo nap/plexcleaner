@@ -9,6 +9,7 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class Database(object):
+    _uncommited = False
     _database_path = 'Library/Application Support/Plex Media Server/Plug-in Support/Databases'
     _update_movie = 'UPDATE media_parts SET file = ? WHERE id = ?'
     _select_movies = (
@@ -42,16 +43,22 @@ class Database(object):
     def update_row(self, mid, value):
         LOG.debug("Updating movie '{0}' with '{1}'".format(mid, value))
         self._cursor.execute(self._update_movie, (value, mid))
+        self._uncommited = True
 
     def update_many_row(self, values):
         LOG.debug("Updating {0} movies".format(len(values)))
         self._cursor.executemany(self._update_movie, values)
-        self.commit()
+        self._uncommited = True
 
     def commit(self):
         LOG.debug('Commiting last changes to database.')
         self._connection.commit()
+        self._uncommited = False
 
     def rollback(self):
         LOG.debug('Rollback last changes to database.')
         self._connection.rollback()
+        self._uncommited = False
+
+    def has_uncommited(self):
+        return self._uncommited
