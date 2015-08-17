@@ -43,6 +43,17 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
         return True
 
 
+def log_error(err, dst):
+    if err == errno.EACCES:
+        LOG.error("Not enough permission to edit: {0}".format(dst))
+
+    elif err == errno.ENOSPC:
+        LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
+
+    else:
+        LOG.error("Unknown error occurred while moving media to destination: {0}".format(os.path.dirname(dst)))
+
+
 def move_media(src, dst):
     try:
         LOG.debug("Copy file '{0}'".format(src))
@@ -60,15 +71,7 @@ def move_media(src, dst):
         return False
 
     except (IOError, OSError) as oe:
-        if oe.errno == errno.EACCES:
-            LOG.error("Not enough permission to edit: {0}".format(dst))
-
-        elif oe.errno == errno.ENOSPC:
-            LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
-
-        else:
-            LOG.error("Unknown error occurred while moving media to destination: {0}".format(os.path.dirname(dst)))
-
+        log_error(oe.errno, dst)
         raise PlexCleanerException("Media movie error occurred".format(os.path.dirname(dst)), severity=logging.CRITICAL)
 
 
@@ -88,15 +91,7 @@ def copy_jacket(src, dst, skip):
         return False
 
     except (IOError, OSError) as oe:
-        if oe.errno == errno.EACCES:
-            LOG.error("Not enough permission to edit: {0}".format(dst))
-
-        elif oe.errno == errno.ENOSPC:
-            LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
-
-        else:
-            LOG.error("Unknown error occurred while copying jacket to destination: {0}".format(os.path.dirname(dst)))
-
+        log_error(oe.errno, dst)
         raise PlexCleanerException("Jacket error occurred".format(os.path.dirname(dst)), severity=logging.ERROR)
 
 
