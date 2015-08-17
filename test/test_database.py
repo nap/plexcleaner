@@ -46,9 +46,16 @@ class TestDatabase(unittest.TestCase):
         row = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (1,)).fetchone()
         self.assertEqual(row[0], '/test/fail')
 
-    def test_has_uncommited(self):
+    def test_has_uncommited_single(self):
         db = self.get_db()
         db.update_row(1, '/test/success')
+        self.assertTrue(db.has_uncommited())
+        db.commit()
+        self.assertFalse(db.has_uncommited())
+
+    def test_has_uncommited_multiple(self):
+        db = self.get_db()
+        db.update_many_row([('/test/success', 1), ('/test/success', 2), ('/test/success', 3)])
         self.assertTrue(db.has_uncommited())
         db.commit()
         self.assertFalse(db.has_uncommited())
