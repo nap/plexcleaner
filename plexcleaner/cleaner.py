@@ -110,7 +110,6 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                                            severity=logging.CRITICAL)
 
         if update and is_plex_running():
-            LOG.critical('Cannot update media file location if Plex is running')
             raise PlexCleanerException('Should not update database if Plex is running', severity=logging.ERROR)
 
         for movie in library:
@@ -127,7 +126,7 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                 except Exception:  # TODO: Validate exception case
                     # TODO: log...
                     clean_dir(movie.get_correct_absolute_path(override=export))
-                    pass
+
             else:
                 LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
 
