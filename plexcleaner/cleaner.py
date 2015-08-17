@@ -51,7 +51,7 @@ def log_error(err, dst):
         LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
 
     else:
-        LOG.error("Unknown error occurred while moving media to destination: {0}".format(os.path.dirname(dst)))
+        LOG.error("Unknown error occurred while executing operation to destination: {0}".format(os.path.dirname(dst)))
 
 
 def move_media(src, dst):
