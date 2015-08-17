@@ -37,6 +37,11 @@ class TestDatabase(unittest.TestCase):
         rows = db.get_rows().fetchall()
         self.assertEqual(len(rows), 98)
 
+    def test_with_enter_exit(self):
+        with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
+            rows = db.get_rows().fetchall()
+            self.assertEqual(len(rows), 98)
+
     def test_rollback(self):
         db = self.get_db()
         db.update_row(1, '/test/success')
