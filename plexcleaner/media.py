@@ -78,8 +78,7 @@ class Movie(object):
         if not replacements:
             replacements = [('&', 'and')]
 
-        title = unidecode.unidecode(self.title)
-        cleaned = unicodedata.normalize('NFKD', title).encode('ASCII', 'ignore')
+        cleaned = unidecode.unidecode(self.title)
         for r in replacements:
             cleaned = cleaned.replace(*r)
 
