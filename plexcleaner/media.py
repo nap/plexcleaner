@@ -5,6 +5,7 @@ import hashlib
 import json
 
 from pyjarowinkler import distance
+import unidecode
 
 from plexcleaner import LOG
 
@@ -77,7 +78,8 @@ class Movie(object):
         if not replacements:
             replacements = [('&', 'and')]
 
-        cleaned = unicodedata.normalize('NFKD', self.title).encode('ASCII', 'ignore')
+        title = unidecode.unidecode(self.title)
+        cleaned = unicodedata.normalize('NFKD', title).encode('ASCII', 'ignore')
         for r in replacements:
             cleaned = cleaned.replace(*r)
 
