@@ -44,20 +44,49 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
 
 
 def move_media(src, dst):
-    # TODO: Exceptions
-    LOG.debug("Copy file '{0}'".format(src))
-    if os.path.exists(dst):
-        LOG.info("File '{0}' already exist, will override if not the same file.".format(src))
+    try:
+        LOG.debug("Copy file '{0}'".format(src))
+        if os.path.exists(dst):
+            LOG.info("File '{0}' already exist, will override if not the same file.".format(src))
+            return False
 
-    shutil.move(src, dst)
+        shutil.move(src, dst)
+        return True
+
+    except shutil.Error as e:
+        LOG.error(e)
+        return False
 
 
 def copy_jacket(src, dst, skip):
-    if os.path.exists(dst) and skip:
-        LOG.info("Jacket '{0}' already exist, skip.".format(dst))
+    try:
+        if os.path.exists(dst) and skip:
+            LOG.info("Jacket '{0}' already exist, skip.".format(dst))
+            return False
+
+        shutil.copy(src, dst)
+        return True
+
+    except shutil.Error as e:
+        if 'same file' in e:
+            LOG.warning(e)
+
         return False
 
-    return shutil.copy(src, dst)
+    except (IOError, OSError) as oe:
+        if oe.errno == errno.EACCES:
+            LOG.error("Not enough permission to edit: {0}".format(dst))
+
+        elif oe.errno == errno.ENOSPC:
+            LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
+
+        else:
+            LOG.error("Unknown error occurred while copying jacket to destination: {0}".format(os.path.dirname(dst)))
+
+        raise PlexCleanerException("Unknown jacket error occurred".format(os.path.dirname(dst)),
+                                   severity=logging.CRITICAL)
+
+
 
 
 def create_dir(dst):
@@ -66,6 +95,7 @@ def create_dir(dst):
         return False
 
     LOG.info("Creating directory '{0}'.".format(dst))
+    # OSError - errno.EEXIST
     return os.mkdir(dst)
 
 
@@ -124,11 +154,14 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                 if movie.matched:
                     try:
                         create_dir(movie.get_correct_absolute_path(override=export))
-                        copy_jacket(movie.get_metadata_jacket(), os.path.join(movie.get_correct_absolute_path(override=export), jacket), skip_jacket)
-                        move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
+                        media_moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
 
-                        # TODO: Update media_items.hints, will want to commit by batch, not by items
-                        update_database(db, movie, should_update=update)
+                        copy_jacket(movie.get_metadata_jacket(),
+                                    os.path.join(movie.get_correct_absolute_path(override=export), jacket),
+                                    skip_jacket)
+
+                        if media_moved:
+                            update_database(db, movie, should_update=update)
 
                     except Exception:  # TODO: Validate exception case
                         # TODO: log...
