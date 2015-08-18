@@ -154,10 +154,10 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
             if export:
                 LOG.info("Will consolidate library in: '{0}'".format(export))
 
-                free_space = get_free_fs_space(export)
-                if library.effective_size > free_space:
+                space = get_free_fs_space(export)
+                if library.effective_size > space:
                     raise PlexCleanerException('Remaining space on the target filesystem is not enough to export the '
-                                               'library {0} Bytes > {1} Bytes'.format(library.effective_size, free_space),
+                                               'library {0} Bytes > {1} Bytes'.format(library.effective_size, space),
                                                severity=logging.CRITICAL)
 
             if update and is_plex_running():
