@@ -23,18 +23,17 @@ class Database(object):
     # TODO: add logging
     def __init__(self, metadata_home='/var/lib/plexmediaserver',
                  database_override=None, database_name='com.plexapp.plugins.library.db'):
-        database = os.path.join(metadata_home, self._database_path, database_name)
+        db = os.path.join(metadata_home, self._database_path, database_name)
         try:
             if database_override:
-                database = database_override
-                LOG.debug("User database override {0}".format(database))
+                db = database_override
+                LOG.debug("User database override {0}".format(db))
 
-            self._connection = sqlite3.connect(database)
+            self._connection = sqlite3.connect(db)
             self._cursor = self._connection.cursor()
 
         except sqlite3.OperationalError:
-            raise PlexCleanerException("Could not connect to Plex database: {0}".format(database),
-                                       severity=logging.WARNING)
+            raise PlexCleanerException("Could not connect to Plex database: {0}".format(db), severity=logging.ERROR)
 
     def __enter__(self):
         return self
@@ -42,6 +41,7 @@ class Database(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self._uncommited:
             self.commit()
+
         self._connection.close()
 
     def get_rows(self):
