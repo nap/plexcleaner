@@ -167,20 +167,14 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                 LOG.info(u"Processing: '{0}'".format(movie.basename))
 
                 if movie.matched:
-                    try:
-                        create_dir(movie.get_correct_absolute_path(override=export))
-                        media_moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
+                    new_path = movie.get_correct_absolute_path(override=export)
+                    create_dir(new_path)
 
-                        copy_jacket(movie.get_metadata_jacket(),
-                                    os.path.join(movie.get_correct_absolute_path(override=export), jacket),
-                                    skip_jacket)
-
-                        if media_moved:
-                            update_database(db, movie, should_update=update)
-
-                    except Exception:  # TODO: Validate exception case
-                        # TODO: log...
-                        clean_dir(movie.get_correct_absolute_path(override=export))
+                    media_moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
+                    if media_moved:
+                        new_jacket = os.path.join(new_path, jacket)
+                        copy_jacket(movie.get_metadata_jacket(), new_jacket, skip_jacket)
+                        update_database(db, movie, should_update=update)
 
                 else:
                     LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
