@@ -5,7 +5,7 @@ PWD = $(shell pwd)
 
 all: build
 
-build: clean schema data movies
+build: clean schema data movies dummy
 
 metadata_items.ddl:
 	@printf "Create schema metadata_items: "
@@ -38,8 +38,8 @@ data: media_items.data media_part.data metadata_items.data
 
 clean:
 	@printf "Cleaning old test data: "
-	@rm -Rf $(DATA_PATH)/database $(DATA_PATH)/library $(DATA_PATH)/posters
-	@mkdir $(DATA_PATH)/database $(DATA_PATH)/library $(DATA_PATH)/posters
+	@rm -Rf $(DATA_PATH)/database $(DATA_PATH)/library $(DATA_PATH)/posters $(DATA_PATH)/dummy
+	@mkdir $(DATA_PATH)/database $(DATA_PATH)/library $(DATA_PATH)/posters $(DATA_PATH)/dummy
 	@echo "done"
 
 movies:
@@ -58,4 +58,9 @@ movies:
 	@echo "done"
 	@printf "Generating test poster file: "
 	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT user_thumb_url FROM metadata_items" | cut -d "/" -f 3- | xargs -P 10 -I {} touch $(DATA_PATH)/"{}"
+	@echo "done"
+
+dummy:
+	@printf "Generating dummy file: "
+	@echo 1 > $(DATA_PATH)/dummy/test.pid
 	@echo "done"
