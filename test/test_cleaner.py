@@ -32,7 +32,7 @@ class TestCleaner(unittest.TestCase):
 
     @log_capture()
     def test_log_error_ELSE(self, l):
-        cleaner.log_error(errno.EFTYPE, '/')
+        cleaner.log_error(7, '/')
         self.assertIn('Unknown error', str(l))
 
     def test_is_plex_running_no_pid_file(self):
