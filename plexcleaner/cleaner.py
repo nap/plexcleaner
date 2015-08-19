@@ -114,12 +114,6 @@ def create_dir(dst):
                                    severity=logging.ERROR)
 
 
-def clean_dir(dst):
-    # TODO: rm dir+jacket if not successful
-    # Make sure we don't delete a media file if it was moved
-    pass
-
-
 def update_database(db, m, should_update=False):
     if not should_update:
         LOG.debug('Skipping movie update')
@@ -175,6 +169,9 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                         new_jacket = os.path.join(new_path, jacket)
                         copy_jacket(movie.get_metadata_jacket(), new_jacket, skip_jacket)
                         update_database(db, movie, should_update=update)
+
+                    else:
+                        LOG.warning("Unable to move {0} to {1}".format(movie.correct_title, new_path))
 
                 else:
                     LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
