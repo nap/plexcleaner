@@ -1,7 +1,5 @@
-Implement proper unit test
-Implement proper logging
-Implement proper error exception
 Update README.rst
+Import srt file
 Generate HTML report of file copied/moved/deleted/untouched
 Attempt to match unmatched media
  - Integrate with https://github.com/wackou/guessit
