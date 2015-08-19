@@ -62,5 +62,8 @@ movies:
 
 dummy:
 	@printf "Generating dummy file: "
-	@echo 1 > $(DATA_PATH)/dummy/test.pid
+	@echo $$(ps aux | grep $$(whoami) | tr -s ' ' | cut -d ' ' -f 2 | head -n 1) > $(DATA_PATH)/dummy/ok.pid
+	@echo 1 > $(DATA_PATH)/dummy/ok_no_perm.pid
+	@echo '' > $(DATA_PATH)/dummy/empty.pid
+	@echo '9879876987876879' > $(DATA_PATH)/dummy/bad.pid
 	@echo "done"
