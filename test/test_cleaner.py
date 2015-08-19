@@ -55,25 +55,25 @@ class TestCleaner(unittest.TestCase):
         self.assertIn('Unable to validate if Plex is running', e.exception.message)
 
     def test_move_media(self):
-        #def move_media(src, dst):
+        # def move_media(src, dst):
         pass
 
     def test_copy_jacket(self):
-        #def copy_jacket(src, dst, skip):
+        # def copy_jacket(src, dst, skip):
         pass
 
     def test_copy_jacket_skpi(self):
-        #def copy_jacket(src, dst, skip):
+        # def copy_jacket(src, dst, skip):
         pass
 
     def test_creatE_dir(self):
-        #def create_dir(dst):
+        # def create_dir(dst):
         pass
 
     def test_update_database(self):
-        #def update_database(db, m, should_update=False):
+        # def update_database(db, m, should_update=False):
         pass
 
     def test_update_database_no_update(self):
-        #def update_database(db, m, should_update=False):
+        # def update_database(db, m, should_update=False):
         pass
