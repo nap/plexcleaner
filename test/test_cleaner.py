@@ -1,6 +1,8 @@
 import unittest
 import subprocess
 import re
+import errno
+from testfixtures import log_capture
 
 from plexcleaner import cleaner
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
@@ -17,12 +19,23 @@ class TestCleaner(unittest.TestCase):
         available = self._BLK_SIZE * self._KB_TO_B * int(actual['available'])
         self.assertEqual(available, cleaner.get_free_fs_space('./'))
 
+    @log_capture()
+    def test_log_error_EACCES(self, l):
+        cleaner.log_error(errno.EACCES, '/')
+        self.assertIn('Not enough permission', str(l))
+
+    @log_capture()
+    def test_log_error_ENOSPC(self, l):
+        cleaner.log_error(errno.ENOSPC, '/')
+        self.assertIn('Not enough space', str(l))
+
+    @log_capture()
+    def test_log_error_ELSE(self, l):
+        cleaner.log_error(errno.EFTYPE, '/')
+        self.assertIn('Unknown error', str(l))
+
     def test_is_plex_running(self):
         #def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
-        pass
-
-    def test_log_error(self):
-        #def log_error(err, dst):
         pass
 
     def test_move_media(self):
