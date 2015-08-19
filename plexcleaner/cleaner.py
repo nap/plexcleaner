@@ -24,7 +24,7 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
     try:
         with open(pid_file) as pf:
             pid = int(pf.read())
-            os.kill(pid, signal.SIG_DFL)
+            os.kill(int(pid), signal.SIG_DFL)
 
     except OSError as e:
         if e.errno == errno.ESRCH:
@@ -38,6 +38,9 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
 
     except IOError:
         return False
+
+    except (OverflowError, ValueError):
+        raise PlexCleanerException('Unable to validate if Plex is running')
 
     else:
         return True
