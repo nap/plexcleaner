@@ -98,7 +98,6 @@ def copy_jacket(src, dst, skip):
 
     except (IOError, OSError) as oe:
         log_error(oe.errno, dst)
-        raise PlexCleanerException("Jacket error occurred".format(os.path.dirname(dst)), severity=logging.ERROR)
 
 
 def create_dir(dst):
@@ -126,7 +125,7 @@ def update_database(db, m, should_update=False):
         return False
 
     filename = m.get_correct_absolute_file()
-    db.update_row(m.id, filename)
+    db.update_row(m.mid, filename)
     LOG.info("Updating movie '{0}' with path '{1}'".format(m.correct_title, filename))
 
 
