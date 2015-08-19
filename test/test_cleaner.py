@@ -1,11 +1,21 @@
 import unittest
+import subprocess
+import re
+
+from plexcleaner import cleaner
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class TestCleaner(unittest.TestCase):
+    _BLK_SIZE = 1024
+    _KB_TO_B = 1024
+
     def test_get_free_fs_space(self):
-        #def get_free_fs_space(export):
-        pass
+        reg = re.compile("[ ]+")
+        output = subprocess.check_output(['df', '-k', '-P', './']).lower()
+        actual = dict(zip(reg.split(output.split('\n')[0]), reg.split(output.split('\n')[1])))
+        available = self._BLK_SIZE * self._KB_TO_B * int(actual['available'])
+        self.assertEqual(available, cleaner.get_free_fs_space('./'))
 
     def test_is_plex_running(self):
         #def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
