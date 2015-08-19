@@ -53,6 +53,9 @@ def log_error(err, dst):
     elif err == errno.ENOSPC:
         LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
 
+    elif err == errno.ENOENT:
+        LOG.error("Unable to locate source file to copy to {0}".format(dst))
+
     else:
         LOG.error("Unknown error occurred while executing operation to destination: {0}".format(os.path.dirname(dst)))
 
