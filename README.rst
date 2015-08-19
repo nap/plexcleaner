@@ -27,9 +27,11 @@ Help
       --update / --no-update          Update Plex database with renamed and moved
                                       media.
       --jacket TEXT                   Name that each movie jacket will have.
+      --skip-jacket                   Should the copy of movie jacket be skipped
+                                      if it's already present.
       --interrupt                     Interrupt the whole process if a movie file
                                       is not found on the filesystem.
-      --log-level [DEBUG|INFO|WARNING|CRITICAL|ERROR]
+      --log-level [error|debug|info|critical|warning]
                                       Application verbosity, default is INFO
       --database-override PATH        Override the expected Plex Database
                                       location.
