@@ -29,4 +29,5 @@ var/
 test/database
 test/library
 test/posters
+test/dummy
 .DS_Store
