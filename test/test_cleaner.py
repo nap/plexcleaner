@@ -5,6 +5,7 @@ import errno
 from testfixtures import log_capture
 
 from plexcleaner import cleaner
+from plexcleaner.exception import PlexCleanerException
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
@@ -34,9 +35,24 @@ class TestCleaner(unittest.TestCase):
         cleaner.log_error(errno.EFTYPE, '/')
         self.assertIn('Unknown error', str(l))
 
-    def test_is_plex_running(self):
-        #def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
-        pass
+    def test_is_plex_running_no_pid_file(self):
+        self.assertFalse(cleaner.is_plex_running(pid_file='/PlexMediaServer.pid'))
+
+    def test_is_plex_running_pid_file_with_ok_pid(self):
+        self.assertTrue(cleaner.is_plex_running(pid_file='./test/dummy/ok.pid'))
+
+    def test_is_plex_running_pid_file_with_ok_no_perm_pid(self):
+        self.assertTrue(cleaner.is_plex_running(pid_file='./test/dummy/ok_no_perm.pid'))
+
+    def test_is_plex_running_pid_file_with_empty_pid(self):
+        with self.assertRaises(PlexCleanerException) as e:
+            cleaner.is_plex_running(pid_file='./test/dummy/empty.pid')
+        self.assertIn('Unable to validate if Plex is running', e.exception.message)
+
+    def test_is_plex_running_pid_file_with_bad_pid(self):
+        with self.assertRaises(PlexCleanerException) as e:
+            cleaner.is_plex_running(pid_file='./test/dummy/bad.pid')
+        self.assertIn('Unable to validate if Plex is running', e.exception.message)
 
     def test_move_media(self):
         #def move_media(src, dst):
