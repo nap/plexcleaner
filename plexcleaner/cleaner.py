@@ -33,9 +33,6 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
         elif e.errno == errno.EPERM:
             return True  # The process does not have permission to send the signal to any of the target processes
 
-        else:
-            raise PlexCleanerException('Unable to validate if Plex is running')
-
     except IOError:
         return False
 
