@@ -83,7 +83,7 @@ class TestMediaMovie(unittest.TestCase):
         self.assertTrue('matched' in json_dict)
         self.assertTrue('exist' in json_dict)
         self.assertTrue('filename' in json_dict)
-        self.assertTrue('absolute_jacket_path' in json_dict)
+        self.assertTrue('relative_jacket_path' in json_dict)
         self.assertTrue('original_file' in json_dict)
         self.assertTrue('mid' in json_dict)
 
