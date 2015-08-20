@@ -89,20 +89,26 @@ class Movie(object):
         return "{0} ({1}){2}".format(self.correct_title, self.year, self.file_ext)
 
     def get_correct_path(self):
+        if self.get_correct_directory() == os.path.basename(self.filepath):
+            return self.get_correct_filename()
+
         return os.path.join(self.get_correct_directory(), self.get_correct_filename())
 
-    def get_correct_absolute_file(self, override=None):  # parent is for move the file to a new location
-        if not override:
-            return os.path.join(self.filepath, self.get_correct_path())
+    def get_correct_absolute_file(self, override=None):
+        if override:
+            return os.path.join(override, self.get_correct_path())
 
-        return os.path.join(override, self.get_correct_path())
+        return os.path.join(self.filepath, self.get_correct_path())
 
     def get_correct_absolute_path(self, override=None):
         directory = "{0} ({1})".format(self.correct_title, self.year)
-        if not override:
-            return os.path.join(self.filepath, directory)
+        if override:
+            return os.path.join(override, directory)
 
-        return os.path.join(override, directory)
+        if directory == os.path.basename(self.filepath):
+            return self.filepath
+
+        return os.path.join(self.filepath, directory)
 
     def get_metadata_jacket(self, metadata_home='/var/lib/plexmediaserver'):
         if not self.matched:
