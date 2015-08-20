@@ -54,6 +54,10 @@ class TestMediaMovie(unittest.TestCase):
         movie = Movie(3, u"a", 'b.avi', 2010, 2, 2.2, 'c', self._jacket)
         self.assertEqual(movie.get_correct_path(), "a (2010)/a (2010).avi")
 
+    def test_get_correct_path_similar(self):
+        movie = Movie(3, u"a", 'a (2010)/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        self.assertEqual(movie.get_correct_path(), "a (2010).avi")
+
     def test_get_correct_absolute_file(self):
         movie = Movie(4, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
         self.assertEqual(movie.get_correct_absolute_file(), "/test/a (2010)/a (2010).avi")
@@ -64,6 +68,10 @@ class TestMediaMovie(unittest.TestCase):
 
     def test_get_correct_absolute_path(self):
         movie = Movie(4, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        self.assertEqual(movie.get_correct_absolute_path(), "/test/a (2010)")
+
+    def test_get_correct_absolute_path_similar(self):
+        movie = Movie(4, u"a", '/test/a (2010)/b.avi', 2010, 2, 2.2, 'c', self._jacket)
         self.assertEqual(movie.get_correct_absolute_path(), "/test/a (2010)")
 
     def test_get_correct_absolute_path_with_override(self):
