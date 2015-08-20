@@ -59,6 +59,9 @@ class TestCleaner(unittest.TestCase):
             cleaner.is_plex_running(pid_file='./test/dummy/bad.pid')
         self.assertIn('Unable to validate if Plex is running', e.exception.message)
 
+    def test_is_plex_running_pid_file_with_max_pid(self):
+        self.assertFalse(cleaner.is_plex_running(pid_file='./test/dummy/max.pid'))
+
     def test_move_media(self):
         # def move_media(src, dst):
         pass
