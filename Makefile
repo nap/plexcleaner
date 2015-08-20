@@ -66,4 +66,5 @@ dummy:
 	@echo 1 > $(DATA_PATH)/dummy/ok_no_perm.pid
 	@echo '' > $(DATA_PATH)/dummy/empty.pid
 	@echo '9879876987876879' > $(DATA_PATH)/dummy/bad.pid
+	@echo $$([[ -f /proc/sys/kernel/pid_max ]] && echo $$(cat /proc/sys/kernel/pid_max) || echo 32768 ) > $(DATA_PATH)/dummy/max.pid
 	@echo "done"
