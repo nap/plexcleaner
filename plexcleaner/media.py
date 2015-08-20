@@ -70,7 +70,7 @@ class Movie(object):
 
         if self.matched:
             h = hashlib.sha1(guid).hexdigest()
-            self.absolute_jacket_path = os.path.join(self._jacket_path.format(h[0], h[1:], jacket[11:]))
+            self.relative_jacket_path = os.path.join(self._jacket_path.format(h[0], h[1:], jacket[11:]))
 
     def _clean_filename(self, replacements=None):
         if not replacements:
@@ -108,7 +108,7 @@ class Movie(object):
         if not self.matched:
             return None
 
-        return os.path.join(metadata_home, self._metadata_path, self.absolute_jacket_path)
+        return os.path.join(metadata_home, self._metadata_path, self.relative_jacket_path)
 
     def __str__(self):
         serialized = dict()
