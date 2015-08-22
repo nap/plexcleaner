@@ -80,7 +80,7 @@ def move_media(src, dst):
 
 def copy_jacket(src, dst, skip):
     try:
-        if os.path.exists(dst) and skip:
+        if os.path.isfile(dst) and skip:
             LOG.info("Jacket '{0}' already exist, skip.".format(dst))
             return False
 
