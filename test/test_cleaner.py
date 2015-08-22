@@ -64,8 +64,10 @@ class TestCleaner(unittest.TestCase):
         self.assertFalse(cleaner.is_plex_running(pid_file='./test/dummy/max.pid'))
 
     def test_move_media(self):
-        # def move_media(src, dst):
-        pass
+        cleaner.create_dir('./test/library/2 Guns (2009)')
+        self.assertTrue(os.path.isdir('./test/library/2 Guns (2009)'))
+        cleaner.move_media('./test/library/2 Guns.avi', './test/library/2 Guns (2009)/2 Guns.avi')
+        self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/2 Guns.avi'))
 
     def test_copy_jacket(self):
         # def copy_jacket(src, dst, skip):
