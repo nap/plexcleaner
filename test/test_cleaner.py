@@ -2,6 +2,7 @@ import unittest
 import subprocess
 import re
 import errno
+import os
 from testfixtures import log_capture
 
 from plexcleaner import cleaner
@@ -75,8 +76,8 @@ class TestCleaner(unittest.TestCase):
         pass
 
     def test_create_dir(self):
-        # def create_dir(dst):
-        pass
+        cleaner.create_dir('./test/library/test_directory')
+        self.assertTrue(os.path.isdir('./test/library/test_directory'))
 
     def test_update_database(self):
         # def update_database(db, m, should_update=False):
