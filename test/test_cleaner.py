@@ -74,7 +74,7 @@ class TestCleaner(unittest.TestCase):
         # def copy_jacket(src, dst, skip):
         pass
 
-    def test_creatE_dir(self):
+    def test_create_dir(self):
         # def create_dir(dst):
         pass
 
