@@ -103,6 +103,7 @@ class TestCleaner(unittest.TestCase):
             cleaner.update_database(db, m, should_update=True)
             after = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
             self.assertNotEqual(before[0], after[0])
+            db.rollback()
 
     def test_update_database_no_update(self):
         with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
