@@ -71,7 +71,7 @@ class TestCleaner(unittest.TestCase):
         # def copy_jacket(src, dst, skip):
         pass
 
-    def test_copy_jacket_skpi(self):
+    def test_copy_jacket_skip(self):
         # def copy_jacket(src, dst, skip):
         pass
 
