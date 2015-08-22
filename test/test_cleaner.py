@@ -3,6 +3,7 @@ import subprocess
 import re
 import errno
 import os
+import shutil
 from testfixtures import log_capture
 
 from plexcleaner import cleaner
@@ -64,16 +65,16 @@ class TestCleaner(unittest.TestCase):
         self.assertFalse(cleaner.is_plex_running(pid_file='./test/dummy/max.pid'))
 
     def test_move_media(self):
+        shutil.copy('./test/library/2 Guns.avi', './test/library/abc.avi')
         cleaner.create_dir('./test/library/2 Guns (2009)')
         self.assertTrue(os.path.isdir('./test/library/2 Guns (2009)'))
-        cleaner.move_media('./test/library/2 Guns.avi', './test/library/2 Guns (2009)/2 Guns.avi')
+        moved = cleaner.move_media('./test/library/abc.avi', './test/library/2 Guns (2009)/2 Guns.avi')
         self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/2 Guns.avi'))
+        self.assertTrue(moved)
 
     def test_copy_jacket(self):
         cleaner.create_dir('./test/library/2 Guns (2009)')
         self.assertTrue(os.path.isdir('./test/library/2 Guns (2009)'))
-        cleaner.move_media('./test/library/2 Guns.avi', './test/library/2 Guns (2009)/2 Guns.avi')
-        self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/2 Guns.avi'))
         cleaner.copy_jacket('./test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
                             './test/library/2 Guns (2009)/poster.jpg', False)
         self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/poster.jpg'))
@@ -81,8 +82,6 @@ class TestCleaner(unittest.TestCase):
     def test_copy_jacket_skip(self):
         cleaner.create_dir('./test/library/13 (2009)')
         self.assertTrue(os.path.isdir('./test/library/13 (2009)'))
-        cleaner.move_media('./test/library/13.avi', './test/library/13 (2009)/13.avi')
-        self.assertTrue(os.path.exists('./test/library/13 (2009)/13.avi'))
         copied = cleaner.copy_jacket('./test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
                                      './test/library/13 (2009)/poster.jpg', False)
         self.assertTrue(copied)
