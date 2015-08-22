@@ -70,8 +70,13 @@ class TestCleaner(unittest.TestCase):
         self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/2 Guns.avi'))
 
     def test_copy_jacket(self):
-        # def copy_jacket(src, dst, skip):
-        pass
+        cleaner.create_dir('./test/library/2 Guns (2009)')
+        self.assertTrue(os.path.isdir('./test/library/2 Guns (2009)'))
+        cleaner.move_media('./test/library/2 Guns.avi', './test/library/2 Guns (2009)/2 Guns.avi')
+        self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/2 Guns.avi'))
+        cleaner.copy_jacket('./test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
+                            './test/library/2 Guns (2009)/poster.jpg', False)
+        self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/poster.jpg'))
 
     def test_copy_jacket_skip(self):
         # def copy_jacket(src, dst, skip):
