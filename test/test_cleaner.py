@@ -4,6 +4,8 @@ import re
 import errno
 import os
 import shutil
+from plexcleaner.database import Database
+from plexcleaner.media import Movie
 from testfixtures import log_capture
 
 from plexcleaner import cleaner
@@ -99,5 +101,9 @@ class TestCleaner(unittest.TestCase):
         pass
 
     def test_update_database_no_update(self):
-        # def update_database(db, m, should_update=False):
-        pass
+        with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
+            m = Movie(1, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', './test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
+            before = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
+            cleaner.update_database(db, m, should_update=False)
+            after = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
+            self.assertEqual(before[0], after[0])
