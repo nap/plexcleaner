@@ -25,6 +25,7 @@ var/
 
 *.db*
 .idea/
+.tox/
 
 test/database
 test/library
@@ -32,3 +33,4 @@ test/posters
 test/dummy
 .DS_Store
 .coverage
+.coverage.*
