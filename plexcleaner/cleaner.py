@@ -60,7 +60,7 @@ def log_error(err, dst):
 def move_media(src, dst):
     try:
         LOG.debug("Copy file '{0}'".format(src))
-        if os.path.exists(dst):
+        if os.path.isfile(dst):
             LOG.info("File '{0}' already exist, will override if not the same file.".format(src))
             return False
 
