@@ -13,7 +13,6 @@ install:
     - pip install pep8
     - pip install tox
     - pip install -r requirements.txt
-    - make
 script:
     - pep8 plexcleaner/* test/* --ignore E501
     - coverage erase
