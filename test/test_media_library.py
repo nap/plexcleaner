@@ -51,6 +51,3 @@ class TestMediaLibrary(unittest.TestCase):
             library = Library(db)
             self.assertTrue(library.has_missing_file)
             os.rename('test/library/Two Guns.avi', 'test/library/2 Guns.avi')
-
-if __name__ == '__main__':
-    unittest.main()
