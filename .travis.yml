@@ -11,6 +11,7 @@ env:
 install:
     - pip install coveralls
     - pip install tox
+    - pip install flake8
 script:
     - coverage erase
     - coverage run -p setup.py test
