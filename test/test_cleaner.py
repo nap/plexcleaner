@@ -133,7 +133,8 @@ class TestCleaner(unittest.TestCase):
 
     def test_update_database(self):
         with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
-            m = Movie(1, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', './test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
+            m = Movie(1, u"a", '/test/b.avi', 2010, 2, 2.2, 'c',
+                      './test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
             before = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
             cleaner.update_database(db, m, should_update=True)
             after = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
@@ -142,7 +143,8 @@ class TestCleaner(unittest.TestCase):
 
     def test_update_database_no_update(self):
         with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
-            m = Movie(1, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', './test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
+            m = Movie(1, u"a", '/test/b.avi', 2010, 2, 2.2, 'c',
+                      './test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
             before = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
             cleaner.update_database(db, m, should_update=False)
             after = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
