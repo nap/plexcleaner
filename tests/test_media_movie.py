@@ -5,10 +5,11 @@ import json
 from plexcleaner.media import Movie
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
+# flake8: noqa
 
 
 class TestMediaMovie(unittest.TestCase):
-    _lib = os.path.join(os.environ['PYTHONPATH'], 'test/library')
+    _lib = os.path.join(os.environ['PYTHONPATH'], 'tests/library')
     _jacket = 'metadata://com.plexapp.agents.themoviedb_3eb7a03172ea078adbb484ad9d30bfeda4126e2f'
     _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
     _jacket_path = "{0}/{1}.bundle/Contents/_stored/{2}"
@@ -59,27 +60,27 @@ class TestMediaMovie(unittest.TestCase):
         self.assertEqual(movie.get_correct_path(), "a (2010).avi")
 
     def test_get_correct_absolute_file(self):
-        movie = Movie(4, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
-        self.assertEqual(movie.get_correct_absolute_file(), "/test/a (2010)/a (2010).avi")
+        movie = Movie(4, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        self.assertEqual(movie.get_correct_absolute_file(), "/tests/a (2010)/a (2010).avi")
 
     def test_get_correct_absolute_file_with_override(self):
-        movie = Movie(5, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        movie = Movie(5, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', self._jacket)
         self.assertEqual(movie.get_correct_absolute_file(override='/temp'), "/temp/a (2010)/a (2010).avi")
 
     def test_get_correct_absolute_path(self):
-        movie = Movie(4, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
-        self.assertEqual(movie.get_correct_absolute_path(), "/test/a (2010)")
+        movie = Movie(4, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        self.assertEqual(movie.get_correct_absolute_path(), "/tests/a (2010)")
 
     def test_get_correct_absolute_path_similar(self):
-        movie = Movie(4, u"a", '/test/a (2010)/b.avi', 2010, 2, 2.2, 'c', self._jacket)
-        self.assertEqual(movie.get_correct_absolute_path(), "/test/a (2010)")
+        movie = Movie(4, u"a", '/tests/a (2010)/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        self.assertEqual(movie.get_correct_absolute_path(), "/tests/a (2010)")
 
     def test_get_correct_absolute_path_with_override(self):
-        movie = Movie(5, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        movie = Movie(5, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', self._jacket)
         self.assertEqual(movie.get_correct_absolute_path(override='/temp'), "/temp/a (2010)")
 
     def test_str(self):
-        movie = Movie(6, u"a", '/test/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        movie = Movie(6, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', self._jacket)
         json_dict = json.loads(str(movie))
         self.assertTrue('fps' in json_dict)
         self.assertTrue('size' in json_dict)

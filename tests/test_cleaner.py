@@ -10,7 +10,9 @@ from testfixtures import log_capture
 
 from plexcleaner import cleaner
 from plexcleaner.exception import PlexCleanerException
+
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
+# flake8: noqa
 
 
 class TestCleaner(unittest.TestCase):
@@ -48,95 +50,95 @@ class TestCleaner(unittest.TestCase):
         self.assertFalse(cleaner.is_plex_running(pid_file='/PlexMediaServer.pid'))
 
     def test_is_plex_running_pid_file_with_ok_pid(self):
-        self.assertTrue(cleaner.is_plex_running(pid_file='./test/dummy/ok.pid'))
+        self.assertTrue(cleaner.is_plex_running(pid_file='./tests/dummy/ok.pid'))
 
     def test_is_plex_running_pid_file_with_ok_no_perm_pid(self):
-        self.assertTrue(cleaner.is_plex_running(pid_file='./test/dummy/ok_no_perm.pid'))
+        self.assertTrue(cleaner.is_plex_running(pid_file='./tests/dummy/ok_no_perm.pid'))
 
     def test_is_plex_running_pid_file_with_empty_pid(self):
         with self.assertRaises(PlexCleanerException) as e:
-            cleaner.is_plex_running(pid_file='./test/dummy/empty.pid')
+            cleaner.is_plex_running(pid_file='./tests/dummy/empty.pid')
         self.assertIn('Unable to validate if Plex is running', e.exception.message)
 
     def test_is_plex_running_pid_file_with_bad_pid(self):
         with self.assertRaises(PlexCleanerException) as e:
-            cleaner.is_plex_running(pid_file='./test/dummy/bad.pid')
+            cleaner.is_plex_running(pid_file='./tests/dummy/bad.pid')
         self.assertIn('Unable to validate if Plex is running', e.exception.message)
 
     def test_is_plex_running_pid_file_with_max_pid(self):
-        self.assertFalse(cleaner.is_plex_running(pid_file='./test/dummy/max.pid'))
+        self.assertFalse(cleaner.is_plex_running(pid_file='./tests/dummy/max.pid'))
 
     def test_move_media(self):
-        shutil.copy('./test/library/2 Guns.avi', './test/library/abc.avi')
-        cleaner.create_dir('./test/library/2 Guns (2009)')
-        self.assertTrue(os.path.isdir('./test/library/2 Guns (2009)'))
-        moved = cleaner.move_media('./test/library/abc.avi', './test/library/2 Guns (2009)/2 Guns.avi')
-        self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/2 Guns.avi'))
+        shutil.copy('./tests/library/2 Guns.avi', './tests/library/abc.avi')
+        cleaner.create_dir('./tests/library/2 Guns (2009)')
+        self.assertTrue(os.path.isdir('./tests/library/2 Guns (2009)'))
+        moved = cleaner.move_media('./tests/library/abc.avi', './tests/library/2 Guns (2009)/2 Guns.avi')
+        self.assertTrue(os.path.exists('./tests/library/2 Guns (2009)/2 Guns.avi'))
         self.assertTrue(moved)
 
     @log_capture()
     def test_move_media_exist(self, l):
-        shutil.copy('./test/library/2 Guns.avi', './test/library/abc.avi')
-        cleaner.create_dir('./test/library/2 Guns (2009)')
-        self.assertTrue(os.path.isdir('./test/library/2 Guns (2009)'))
-        moved = cleaner.move_media('./test/library/abc.avi', './test/library/2 Guns (2009)/2 Guns.avi')
+        shutil.copy('./tests/library/2 Guns.avi', './tests/library/abc.avi')
+        cleaner.create_dir('./tests/library/2 Guns (2009)')
+        self.assertTrue(os.path.isdir('./tests/library/2 Guns (2009)'))
+        moved = cleaner.move_media('./tests/library/abc.avi', './tests/library/2 Guns (2009)/2 Guns.avi')
         self.assertTrue(moved)
         self.assertIn('already exist', str(l))
 
     def test_move_media_src_default(self):
         with self.assertRaises(PlexCleanerException) as e:
-            moved = cleaner.move_media('./test/library/does_not_exist.avi', './test/library/2 Guns (2009)/2 Guns.avi')
+            moved = cleaner.move_media('./tests/library/does_not_exist.avi', './tests/library/2 Guns (2009)/2 Guns.avi')
             self.assertFalse(moved)
         self.assertTrue('error occurred' in e.exception.message)
 
     def test_copy_jacket(self):
-        cleaner.create_dir('./test/library/2 Guns (2009)')
-        self.assertTrue(os.path.isdir('./test/library/2 Guns (2009)'))
-        cleaner.copy_jacket('./test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
-                            './test/library/2 Guns (2009)/poster.jpg', False)
-        self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/poster.jpg'))
+        cleaner.create_dir('./tests/library/2 Guns (2009)')
+        self.assertTrue(os.path.isdir('./tests/library/2 Guns (2009)'))
+        cleaner.copy_jacket('./tests/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
+                            './tests/library/2 Guns (2009)/poster.jpg', False)
+        self.assertTrue(os.path.exists('./tests/library/2 Guns (2009)/poster.jpg'))
 
     def test_copy_jacket_skip(self):
-        cleaner.create_dir('./test/library/13 (2009)')
-        self.assertTrue(os.path.isdir('./test/library/13 (2009)'))
-        copied = cleaner.copy_jacket('./test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
-                                     './test/library/13 (2009)/poster.jpg', False)
+        cleaner.create_dir('./tests/library/13 (2009)')
+        self.assertTrue(os.path.isdir('./tests/library/13 (2009)'))
+        copied = cleaner.copy_jacket('./tests/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
+                                     './tests/library/13 (2009)/poster.jpg', False)
         self.assertTrue(copied)
-        self.assertTrue(os.path.exists('./test/library/13 (2009)/poster.jpg'))
-        copied = cleaner.copy_jacket('./test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
-                                     './test/library/13 (2009)/poster.jpg', True)
+        self.assertTrue(os.path.exists('./tests/library/13 (2009)/poster.jpg'))
+        copied = cleaner.copy_jacket('./tests/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
+                                     './tests/library/13 (2009)/poster.jpg', True)
         self.assertFalse(copied)
 
     @log_capture()
     def test_copy_jacket_file_missing(self, l):
-        cleaner.copy_jacket('./test/posters/missing', './test/library/2 Guns (2009)/poster.jpg', False)
-        self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/poster.jpg'))
+        cleaner.copy_jacket('./tests/posters/missing', './tests/library/2 Guns (2009)/poster.jpg', False)
+        self.assertTrue(os.path.exists('./tests/library/2 Guns (2009)/poster.jpg'))
         self.assertIn('Unable to locate', str(l))
 
     def test_create_dir(self):
-        cleaner.create_dir('./test/library/test_directory')
-        self.assertTrue(os.path.isdir('./test/library/test_directory'))
+        cleaner.create_dir('./tests/library/test_directory')
+        self.assertTrue(os.path.isdir('./tests/library/test_directory'))
 
     @log_capture()
     def test_create_dir_exist(self, l):
-        cleaner.create_dir('./test/library/test_directory_exist')
-        self.assertTrue(os.path.isdir('./test/library/test_directory_exist'))
-        cleaner.create_dir('./test/library/test_directory_exist')
+        cleaner.create_dir('./tests/library/test_directory_exist')
+        self.assertTrue(os.path.isdir('./tests/library/test_directory_exist'))
+        cleaner.create_dir('./tests/library/test_directory_exist')
         self.assertIn('already exist', str(l))
 
     def test_create_bad_perm(self):
-        cleaner.create_dir('./test/library/test_directory_perm')
-        self.assertTrue(os.path.isdir('./test/library/test_directory_perm'))
-        os.chmod('./test/library/test_directory_perm', 400)
+        cleaner.create_dir('./tests/library/test_directory_perm')
+        self.assertTrue(os.path.isdir('./tests/library/test_directory_perm'))
+        os.chmod('./tests/library/test_directory_perm', 400)
 
         with self.assertRaises(PlexCleanerException) as e:
-            cleaner.create_dir('./test/library/test_directory_perm/bad')
+            cleaner.create_dir('./tests/library/test_directory_perm/bad')
         self.assertTrue('Unable to create' in e.exception.message)
 
     def test_update_database(self):
-        with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
-            m = Movie(1, u"a", '/test/b.avi', 2010, 2, 2.2, 'c',
-                      './test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
+        with Database(database_override='./tests/database/com.plexapp.plugins.library.db') as db:
+            m = Movie(1, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c',
+                      './tests/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
             before = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
             cleaner.update_database(db, m, should_update=True)
             after = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
@@ -144,9 +146,9 @@ class TestCleaner(unittest.TestCase):
             db.rollback()
 
     def test_update_database_no_update(self):
-        with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
-            m = Movie(1, u"a", '/test/b.avi', 2010, 2, 2.2, 'c',
-                      './test/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
+        with Database(database_override='./tests/database/com.plexapp.plugins.library.db') as db:
+            m = Movie(1, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c',
+                      './tests/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
             before = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
             cleaner.update_database(db, m, should_update=False)
             after = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
