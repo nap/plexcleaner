@@ -105,9 +105,31 @@ class TestCleaner(unittest.TestCase):
                                      './test/library/13 (2009)/poster.jpg', True)
         self.assertFalse(copied)
 
+    @log_capture()
+    def test_copy_jacket_file_missing(self, l):
+        cleaner.copy_jacket('./test/posters/missing', './test/library/2 Guns (2009)/poster.jpg', False)
+        self.assertTrue(os.path.exists('./test/library/2 Guns (2009)/poster.jpg'))
+        self.assertIn('Unable to locate', str(l))
+
     def test_create_dir(self):
         cleaner.create_dir('./test/library/test_directory')
         self.assertTrue(os.path.isdir('./test/library/test_directory'))
+
+    @log_capture()
+    def test_create_dir_exist(self, l):
+        cleaner.create_dir('./test/library/test_directory_exist')
+        self.assertTrue(os.path.isdir('./test/library/test_directory_exist'))
+        cleaner.create_dir('./test/library/test_directory_exist')
+        self.assertIn('already exist', str(l))
+
+    def test_create_bad_perm(self):
+        cleaner.create_dir('./test/library/test_directory_perm')
+        self.assertTrue(os.path.isdir('./test/library/test_directory_perm'))
+        os.chmod('./test/library/test_directory_perm', 400)
+
+        with self.assertRaises(PlexCleanerException) as e:
+            cleaner.create_dir('./test/library/test_directory_perm/bad')
+        self.assertTrue('Unable to create' in e.exception.message)
 
     def test_update_database(self):
         with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
