@@ -1,4 +1,4 @@
-DATA_PATH ?= test
+DATA_PATH ?= tests
 DB_SQL ?= etc
 DB_NAME ?= com.plexapp.plugins.library.db
 PWD = $(shell pwd)
