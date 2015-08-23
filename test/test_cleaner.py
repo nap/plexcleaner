@@ -80,11 +80,13 @@ class TestCleaner(unittest.TestCase):
         cleaner.create_dir('./test/library/2 Guns (2009)')
         self.assertTrue(os.path.isdir('./test/library/2 Guns (2009)'))
         moved = cleaner.move_media('./test/library/abc.avi', './test/library/2 Guns (2009)/2 Guns.avi')
+        self.assertTrue(moved)
         self.assertIn('already exist', str(l))
 
     def test_move_media_src_default(self):
         with self.assertRaises(PlexCleanerException) as e:
             moved = cleaner.move_media('./test/library/does_not_exist.avi', './test/library/2 Guns (2009)/2 Guns.avi')
+            self.assertFalse(moved)
         self.assertTrue('error occurred' in e.exception.message)
 
     def test_copy_jacket(self):
