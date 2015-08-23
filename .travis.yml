@@ -9,12 +9,8 @@ notifications:
 env:
     - PYTHONPATH=./
 install:
-    - pip install -r requirements.txt
     - pip install tox
     - pip install coveralls
-    - pip install pytest
-    - pip install pytest-cov
-    - pip install flake8
 script:
     - python setup.py test
 after_success:
