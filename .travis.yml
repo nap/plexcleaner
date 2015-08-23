@@ -10,11 +10,8 @@ env:
     - PYTHONPATH=./
 install:
     - pip install coveralls
-    - pip install pep8
     - pip install tox
-    - pip install -r requirements.txt
 script:
-    - pep8 plexcleaner/* test/* --ignore E501
     - coverage erase
     - coverage run -p setup.py test
     - coverage combine
