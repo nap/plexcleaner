@@ -18,6 +18,7 @@ class TestDatabase(unittest.TestCase):
     def test_database_exception(self):
         with self.assertRaises(PlexCleanerException) as e:
             db = Database(database_override='./path/to/com.plexapp.plugins.library.db')
+            self.assertFalse(db.has_uncommited())
         self.assertTrue('Could not connect' in e.exception.message)
 
     def test_update(self):
