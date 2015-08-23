@@ -3,7 +3,22 @@ __version__ = '0.0.1'
 
 import os
 import sys
-from setuptools import setup, find_packages
+import subprocess
+from setuptools import setup, find_packages, Command
+
+
+class PyTest(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        errno = subprocess.call([sys.executable, 'runtests.py'], env={'PYTHONPATH': './'})
+        raise SystemExit(errno)
 
 
 if sys.version_info[:2] < (2, 7):
@@ -29,6 +44,7 @@ setup_info = {
     'keywords': 'plex library movie media matching taglib jacket',
     'packages': find_packages(),
     'long_description': read('README.rst'),
+    'cmdclass': {'test': PyTest},
     'classifiers': [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
