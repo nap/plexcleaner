@@ -42,6 +42,15 @@ class TestDatabase(unittest.TestCase):
             rows = db.get_rows().fetchall()
             self.assertEqual(len(rows), 98)
 
+    def test_with_enter_exit_commit(self):
+        with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
+            db._uncommited = True
+            db._cursor.execute('UPDATE media_parts SET hash = ? WHERE id = ?', ('test', 1))
+
+        with Database(database_override='./test/database/com.plexapp.plugins.library.db') as db:
+            result = db._cursor.execute('SELECT hash FROM media_parts WHERE id = ?', (1, )).fetchone()
+            self.assertEqual('test', result[0])
+
     def test_rollback(self):
         db = self.get_db()
         db.update_row(1, '/test/success')
@@ -64,6 +73,3 @@ class TestDatabase(unittest.TestCase):
         self.assertTrue(db.has_uncommited())
         db.commit()
         self.assertFalse(db.has_uncommited())
-
-if __name__ == '__main__':
-    unittest.main()
