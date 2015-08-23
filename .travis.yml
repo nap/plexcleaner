@@ -9,13 +9,13 @@ notifications:
 env:
     - PYTHONPATH=./
 install:
-    - pip install coveralls
-    - pip install tox
-    - pip install flake8
     - pip install -r requirements.txt
+    - pip install tox
+    - pip install coveralls
+    - pip install pytest
+    - pip install pytest-cov
+    - pip install flake8
 script:
-    - coverage erase
-    - coverage run -p setup.py test
-    - coverage combine
+    - python setup.py test
 after_success:
     - coveralls
