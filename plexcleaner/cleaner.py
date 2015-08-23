@@ -86,21 +86,16 @@ def copy_jacket(src, dst, skip):
 
 def create_dir(dst):
     try:
-        if os.path.isdir(dst):
-            LOG.info("Directory '{0}' already exist, skip.".format(dst))
-            return False
-
         LOG.info("Creating directory '{0}'.".format(dst))
         os.mkdir(dst)
         return True
 
     except OSError as e:
-        if e.errno == errno.EACCES:
+        if e.errno == errno.EEXIST:
             LOG.info("Directory '{0}' already exist.".format(dst))
             return False
 
-        raise PlexCleanerException("Unable to create directory {0}".format(os.path.basename(dst)),
-                                   severity=logging.ERROR)
+        raise PlexCleanerException("Unable to create directory '{0}'".format(dst), severity=logging.ERROR)
 
 
 def update_database(db, m, should_update=False):
