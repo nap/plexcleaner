@@ -1,4 +1,3 @@
-import unicodedata
 import string
 import os
 import hashlib
