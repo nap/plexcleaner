@@ -11,6 +11,7 @@ env:
 install:
     - pip install coveralls
     - pip install pep8
+    - pip install tox
     - pip install -r requirements.txt
     - make
 script:
