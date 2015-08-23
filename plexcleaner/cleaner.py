@@ -59,23 +59,16 @@ def log_error(err, dst):
 
 def move_media(src, dst):
     try:
-        LOG.debug("Copy file '{0}'".format(src))
+        LOG.debug("Copy file '{0}' to '{1}'".format(src, dst))
         if os.path.isfile(dst):
             LOG.info("File '{0}' already exist, will override if not the same file.".format(src))
-            return False
 
         shutil.move(src, dst)
         return True
 
-    except shutil.Error as e:
-        if 'already exists' in e:
-            LOG.warning(e)
-
-        return False
-
     except (IOError, OSError) as oe:
         log_error(oe.errno, dst)
-        raise PlexCleanerException("Media movie error occurred".format(os.path.dirname(dst)), severity=logging.CRITICAL)
+        raise PlexCleanerException('Media movie error occurred', severity=logging.CRITICAL)
 
 
 def copy_jacket(src, dst, skip):
