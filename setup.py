@@ -3,26 +3,30 @@ __version__ = '0.0.1'
 
 import os
 import sys
-import subprocess
-from setuptools import setup, find_packages, Command
+from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
 
 
-class PyTest(Command):
-    user_options = []
+class Tox(TestCommand):
+    user_options = [('tox-args=', 'a', "Arguments to pass to tox")]
 
     def initialize_options(self):
-        pass
+        TestCommand.initialize_options(self)
+        self.tox_args = None
 
     def finalize_options(self):
-        pass
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
 
-    def run(self):
-        errno = subprocess.call([sys.executable, 'runtests.py'], env={'PYTHONPATH': './'})
-        raise SystemExit(errno)
-
-
-if sys.version_info[:2] < (2, 7):
-    raise RuntimeError('plexcelaner requires Python 2.7 minimum (untested on python 3)')
+    def run_tests(self):
+        import tox  # import here, cause outside the eggs aren't loaded
+        import shlex
+        args = self.tox_args
+        if args:
+            args = shlex.split(self.tox_args)
+        errno = tox.cmdline(args=args)
+        sys.exit(errno)
 
 
 def read(fname):
@@ -44,7 +48,8 @@ setup_info = {
     'keywords': 'plex library movie media matching taglib jacket',
     'packages': find_packages(),
     'long_description': read('README.rst'),
-    'cmdclass': {'test': PyTest},
+    'tests_require': ['tox'],
+    'cmdclass': {'test': Tox},
     'classifiers': [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
