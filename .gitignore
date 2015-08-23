@@ -6,3 +6,4 @@ test/posters
 test/dummy
 .coverage
 .tox
+*.pyc
