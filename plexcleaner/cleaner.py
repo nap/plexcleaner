@@ -80,12 +80,6 @@ def copy_jacket(src, dst, skip):
         shutil.copy(src, dst)
         return True
 
-    except shutil.Error as e:
-        if 'same file' in e:
-            LOG.warning(e)
-
-        return False
-
     except (IOError, OSError) as oe:
         log_error(oe.errno, dst)
 
