@@ -1,9 +1,9 @@
 *.egg-info
 .idea
-test/database
-test/library
-test/posters
-test/dummy
+tests/database
+tests/library
+tests/posters
+tests/dummy
 .coverage
 .tox
 *.pyc
