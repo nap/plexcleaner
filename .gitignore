@@ -31,3 +31,4 @@ test/library
 test/posters
 test/dummy
 .DS_Store
+.coverage
