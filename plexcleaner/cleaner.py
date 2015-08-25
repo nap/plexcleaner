@@ -117,7 +117,7 @@ def update_database(db, m, should_update=False):
 @click.option('--interrupt', **cli.interrupt)
 @click.option('--log-level', **cli.log_level)
 @click.option('--database-override', **cli.database_override)
-def main(plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
+def clean(plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
     LOG.setLevel(logging.getLevelName(log_level.upper()))
     with database.Database(metadata_home=plex_home, database_override=database_override) as db:
         try:
@@ -161,11 +161,12 @@ def main(plex_home, export, update, jacket, interrupt, log_level, database_overr
                     LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
 
         except PlexCleanerException as ce:
-            print ce.message
+            LOG.error("Unable to process library, {0}".format(ce.message))
+            sys.exit(1)
 
         except KeyboardInterrupt:
             LOG.info("bye.")
             sys.exit(0)
 
 if __name__ == '__main__':
-    main()
+    clean()
