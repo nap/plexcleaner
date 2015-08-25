@@ -1,5 +1,5 @@
-Update README.rst
 Import srt file
+Figure out how to test cleaner function
 Generate HTML report of file copied/moved/deleted/untouched
 Attempt to match unmatched media
  - Integrate with https://github.com/wackou/guessit
