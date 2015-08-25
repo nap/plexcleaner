@@ -1,7 +1,2 @@
 Import srt file (/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Media/localhost/5/e0b5166ba668a2065f9593ad7cc84a5b352ba2f.bundle/Contents/Subtitles/en/com.plexapp.agents.opensubtitles_fd0444ab4c8e1d103c9e868bcb3253603a8b4fb7.srt)
-Figure out how to test cleaner function
 Generate HTML report of file copied/moved/deleted/untouched
-Attempt to match unmatched media
- - Integrate with https://github.com/wackou/guessit
- - Integrate with http://github.com/supermihi/pytaglib (or use media_items value of matched media)
- - Use taglib to identify the better file when duplicate with different extension
