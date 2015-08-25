@@ -51,4 +51,4 @@ Suggested Media Library Format
        |- Batman Begins (2005).eng.srt
        `- poster.jpg
 
-:Version: 0.0.1 of 2015-XX-XX
+:Version: 0.1a of 2015-08-25
