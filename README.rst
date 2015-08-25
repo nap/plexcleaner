@@ -1,4 +1,4 @@
-PlexCleaner
+plexcleaner
 ===========
 .. image:: https://travis-ci.org/nap/plexcleaner.svg?branch=master
     :target: https://travis-ci.org/nap/plexcleaner
