@@ -6,6 +6,7 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 plex_home = {
     'type': click.Path(exists=True, dir_okay=True, readable=True, resolve_path=True),
     'default': '/var/lib/plexmediaserver',
+    'show_default': True,
     'help': 'Installation location of the Plex Media Server.'
 }
 
@@ -24,6 +25,7 @@ update = {
 jacket = {
     'type': click.STRING,
     'default': 'poster.jpg',
+    'show_default': True,
     'help': 'Name that each movie jacket will have.'
 }
 
