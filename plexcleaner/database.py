@@ -54,6 +54,7 @@ class Database(object):
 
         except sqlite3.DatabaseError as de:
             LOG.error("Unable to get database rows: {0}".format(de.message))
+            return False
 
     def update_row(self, mid, value):
         LOG.debug("Updating movie '{0}' with '{1}'".format(mid, value))
