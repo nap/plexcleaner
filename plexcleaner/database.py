@@ -53,8 +53,7 @@ class Database(object):
             return self._cursor.execute(''.join(self._select_movies))
 
         except sqlite3.DatabaseError as de:
-            LOG.error("Unable to get database rows: {0}".format(de.message))
-            return False
+            raise PlexCleanerException("Unabled to fetch database rows {0}".format(de.message), severity=logging.ERROR)
 
     def update_row(self, mid, value):
         LOG.debug("Updating movie '{0}' with '{1}'".format(mid, value))
