@@ -81,7 +81,7 @@ class Database(object):
             self._uncommited = False
 
         except sqlite3.DatabaseError as de:
-            LOG.error("Unable unable to rollback uncommited changes: {0}".format(de.message))
+            LOG.error("Unable unable to rollback uncommitted changes: {0}".format(de.message))
 
     def has_uncommited(self):
         return self._uncommited
