@@ -49,7 +49,11 @@ class Database(object):
         self._connection.close()
 
     def get_rows(self):
-        return self._cursor.execute(''.join(self._select_movies))
+        try:
+            return self._cursor.execute(''.join(self._select_movies))
+
+        except sqlite3.DatabaseError as de:
+            LOG.error("Unable to get database rows: {0}".format(de.message))
 
     def update_row(self, mid, value):
         LOG.debug("Updating movie '{0}' with '{1}'".format(mid, value))
@@ -63,13 +67,21 @@ class Database(object):
 
     def commit(self):
         LOG.debug('Commiting last changes to database.')
-        self._connection.commit()
-        self._uncommited = False
+        try:
+            self._connection.commit()
+            self._uncommited = False
+
+        except sqlite3.DatabaseError as de:
+            LOG.error("Unable to commit changes to database: {0}".format(de.message))
 
     def rollback(self):
         LOG.debug('Rollback last changes to database.')
-        self._connection.rollback()
-        self._uncommited = False
+        try:
+            self._connection.rollback()
+            self._uncommited = False
+
+        except sqlite3.DatabaseError as de:
+            LOG.error("Unable unable to rollback uncommited changes: {0}".format(de.message))
 
     def has_uncommited(self):
         return self._uncommited
