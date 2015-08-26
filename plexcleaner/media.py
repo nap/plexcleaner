@@ -2,11 +2,13 @@ import string
 import os
 import hashlib
 import json
+import logging
 
 from pyjarowinkler import distance
 import unidecode
 
 from plexcleaner import LOG
+from exception import PlexCleanerException
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
@@ -20,7 +22,11 @@ class Library(object):
         self.effective_size = 0
         self.has_missing_file = False
 
-        for row in db.get_rows():
+        rows = db.get_rows()
+        if not rows:
+            raise PlexCleanerException("Unabled to fetch database rows", severity=logging.ERROR)
+
+        for row in rows:
             movie = Movie(*row)
             self._update_library(movie)
 
