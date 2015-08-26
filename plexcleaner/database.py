@@ -35,6 +35,9 @@ class Database(object):
         except sqlite3.OperationalError:
             raise PlexCleanerException("Could not connect to Plex database: {0}".format(db), severity=logging.ERROR)
 
+        except sqlite3.DatabaseError as de:
+            raise PlexCleanerException("Could not open Plex database: {0}".format(de.message), severity=logging.ERROR)
+
     def __enter__(self):
         return self
 
