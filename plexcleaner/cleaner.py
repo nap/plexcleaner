@@ -160,7 +160,7 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
                 else:
                     LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
 
-        except PlexCleanerException as ce:
+        except PlexCleanerException:
             LOG.error('PlexCleaner did not process media library.')
             sys.exit(1)
 
