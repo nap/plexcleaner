@@ -23,6 +23,10 @@ def check_permissions():
     pass
 
 
+def restore_backup_database():
+    pass
+
+
 def get_free_fs_space(export):
     statvfs = os.statvfs(export)
     return statvfs.f_frsize * statvfs.f_bavail * 1024
