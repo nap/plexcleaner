@@ -5,6 +5,7 @@ import os
 import signal
 import errno
 import shutil
+import pwd
 
 from plexcleaner import LOG
 from exception import PlexCleanerException
@@ -15,15 +16,16 @@ import database
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
-def check_user_permission():
-    pass
+def check_permission(db):
+    current_user = pwd.getpwuid(os.geteuid()).pw_name
+    return all([
+        current_user in ['root', 'plex'],
+        os.access(db, os.W_OK),
+        os.access(db, os.R_OK)
+    ])
 
 
 def backup_database():
-    pass
-
-
-def check_database_permissions():
     pass
 
 
