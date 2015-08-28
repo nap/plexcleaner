@@ -19,7 +19,7 @@ def backup_database():
     pass
 
 
-def check_permissions():
+def check_database_permissions():
     pass
 
 
