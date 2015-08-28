@@ -50,6 +50,9 @@ setup_info = {
     'long_description': read('README.rst'),
     'tests_require': ['tox'],
     'cmdclass': {'test': Tox},
+    'entry_points': {
+        'console_scripts': ['plexcleaner = plexcleaner.cleaner:clean']
+    },
     'classifiers': [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
