@@ -119,9 +119,14 @@ def update_database(db, m, should_update=False):
         LOG.debug('Skipping movie update')
         return False
 
-    filename = m.get_correct_absolute_file()
-    db.update_row(m.mid, filename)
-    LOG.info("Updating movie '{0}' with path '{1}'".format(m.correct_title, filename))
+    if m.need_update():
+        filename = m.get_correct_absolute_file()
+        db.update_row(m.mid, filename)
+        LOG.info("Updating movie '{0}' with path '{1}'".format(m.correct_title, filename))
+        return True
+
+    LOG.debug("Movie {0} did not change location, database will not be updated.")
+    return False
 
 
 @click.command()
