@@ -15,6 +15,10 @@ import database
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
+def check_user_permission():
+    pass
+
+
 def backup_database():
     pass
 
