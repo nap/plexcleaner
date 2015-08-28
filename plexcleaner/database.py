@@ -20,7 +20,6 @@ class Database(object):
         'JOIN media_parts ON media_parts.media_item_id = media_items.id'
     )
 
-    # TODO: add logging
     def __init__(self, metadata_home='/var/lib/plexmediaserver',
                  database_override=None, database_name='com.plexapp.plugins.library.db'):
         db = os.path.join(metadata_home, self._database_path, database_name)
