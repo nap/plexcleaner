@@ -15,6 +15,14 @@ import database
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
+def backup_database():
+    pass
+
+
+def check_permissions():
+    pass
+
+
 def get_free_fs_space(export):
     statvfs = os.statvfs(export)
     return statvfs.f_frsize * statvfs.f_bavail * 1024
