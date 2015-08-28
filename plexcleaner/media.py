@@ -115,6 +115,9 @@ class Movie(object):
 
         return os.path.join(metadata_home, self._metadata_path, self.relative_jacket_path)
 
+    def need_update(self, override=None):
+        return not self.get_correct_absolute_file(override=override) == self.original_file
+
     def __str__(self):
         serialized = dict()
         attributes = [a for a in dir(self) if not a.startswith('_')]
