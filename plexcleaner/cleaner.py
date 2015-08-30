@@ -28,18 +28,8 @@ def check_permission(db):
 def backup_database(db):
     backup = os.path.join(os.path.expanduser('~'), ''.join([os.path.basename(db), '.bak']))
     try:
+        LOG.info("Creating backup for Plex database at {0}".format(backup))
         shutil.copy(db, backup)
-        return True
-
-    except (IOError, OSError) as oe:
-        log_error(oe.errno, backup)
-        return False
-
-
-def restore_backup_database(db):
-    backup = os.path.join(os.path.expanduser('~'), ''.join([os.path.basename(db), '.bak']))
-    try:
-        shutil.copy(backup, db)
         return True
 
     except (IOError, OSError) as oe:
@@ -160,7 +150,11 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
     with database.Database(metadata_home=plex_home, database_override=database_override) as db:
         try:
             if not check_permission(db):
-                raise PlexCleanerException("Unable to open database, permission denied, located at: {0}".format(db))
+                raise PlexCleanerException("Unable to open database, permission denied, located at: {0}".format(db),
+                                           severity=logging.ERROR)
+
+            if not backup_database(db):
+                raise PlexCleanerException('Unable to create database backup', severity=logging.ERROR)
 
             library = Library(db)
 
