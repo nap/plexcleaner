@@ -156,3 +156,9 @@ class TestCleaner(unittest.TestCase):
         backup = os.path.join(os.path.expanduser('~'), ''.join(['backup.db', backup_time, '.bak']))
         self.assertTrue(os.path.isfile(backup))
         os.unlink(backup)
+
+    @log_capture()
+    def test_database_backup_error(self, l):
+        result = cleaner.backup_database('/etc/sudoers')
+        self.assertIn('Not enough permission', str(l))
+        self.assertFalse(result)
