@@ -6,6 +6,7 @@ import signal
 import errno
 import shutil
 import pwd
+from datetime import datetime
 
 from plexcleaner import LOG
 from exception import PlexCleanerException
@@ -26,7 +27,8 @@ def check_permission(db):
 
 
 def backup_database(db):
-    backup = os.path.join(os.path.expanduser('~'), ''.join([os.path.basename(db), '.bak']))
+    backup_time = datetime.now().strftime('.%Y%m%d-%H%M')
+    backup = os.path.join(os.path.expanduser('~'), ''.join([os.path.basename(db), backup_time, '.bak']))
     try:
         LOG.info("Creating backup for Plex database at {0}".format(backup))
         shutil.copy(db, backup)
