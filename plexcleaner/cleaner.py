@@ -187,7 +187,10 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
                     if media_moved:
                         new_jacket = os.path.join(new_path, jacket)
                         copy_jacket(movie.get_metadata_jacket(metadata_home=plex_home), new_jacket, skip_jacket)
-                        update_database(db, movie, should_update=update)
+                        # TODO: Copy SRT to library
+
+                        if movie.need_update(export=export):
+                            update_database(db, movie, should_update=update)
 
                     else:
                         LOG.warning("Unable to move {0} to {1}".format(movie.correct_title, new_path))
