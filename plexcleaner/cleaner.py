@@ -121,19 +121,11 @@ def create_dir(dst):
         raise PlexCleanerException("Unable to create directory '{0}'".format(dst), severity=logging.ERROR)
 
 
-def update_database(db, m, should_update=False):
-    if not should_update:
-        LOG.debug('Skipping movie update')
-        return False
-
-    if m.need_update():
-        filename = m.get_correct_absolute_file()
-        db.update_row(m.mid, filename)
-        LOG.info("Updating movie '{0}' with path '{1}'".format(m.correct_title, filename))
-        return True
-
-    LOG.debug("Movie {0} did not change location, database will not be updated.")
-    return False
+def update_database(db, m):
+    filename = m.get_correct_absolute_file()
+    db.update_row(m.mid, filename)
+    LOG.info("Updating movie '{0}' with path '{1}'".format(m.correct_title, filename))
+    return True
 
 
 @click.command()
@@ -189,8 +181,8 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
                         copy_jacket(movie.get_metadata_jacket(metadata_home=plex_home), new_jacket, skip_jacket)
                         # TODO: Copy SRT to library
 
-                        if movie.need_update(export=export):
-                            update_database(db, movie, should_update=update)
+                        if movie.need_update(export=export) and update:
+                            update_database(db, movie)
 
                     else:
                         LOG.warning("Unable to move {0} to {1}".format(movie.correct_title, new_path))
