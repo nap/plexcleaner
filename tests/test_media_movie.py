@@ -79,6 +79,14 @@ class TestMediaMovie(unittest.TestCase):
         movie = Movie(5, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', self._jacket)
         self.assertEqual(movie.get_correct_absolute_path(override='/temp'), "/temp/a (2010)")
 
+    def test_need_update_true(self):
+        movie = Movie(4, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', self._jacket)
+        self.assertTrue(movie.need_update())
+
+    def test_should_update_false(self):
+        movie = Movie(4, u"a", '/tests/a (2010)/a (2010).avi', 2010, 2, 2.2, 'c', self._jacket)
+        self.assertFalse(movie.need_update())
+
     def test_str(self):
         movie = Movie(6, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', self._jacket)
         json_dict = json.loads(str(movie))
@@ -95,4 +103,4 @@ class TestMediaMovie(unittest.TestCase):
         self.assertTrue('relative_jacket_path' in json_dict)
         self.assertTrue('original_file' in json_dict)
         self.assertTrue('mid' in json_dict)
-        self.assertTrue('should_update' in json_dict)
+        self.assertTrue('need_update' in json_dict)
