@@ -7,6 +7,7 @@ import shutil
 from plexcleaner.database import Database
 from plexcleaner.media import Movie
 from testfixtures import log_capture
+from datetime import datetime
 
 from plexcleaner import cleaner
 from plexcleaner.exception import PlexCleanerException
@@ -147,3 +148,11 @@ class TestCleaner(unittest.TestCase):
 
     def test_check_permission(self):
         self.assertFalse(cleaner.check_permission('/'))
+
+    def test_database_backup(self):
+        self.assertTrue(os.path.isfile('./tests/database/backup.db'))
+        backup_time = datetime.now().strftime('.%Y%m%d-%H%M')
+        cleaner.backup_database('./tests/database/backup.db')
+        backup = os.path.join(os.path.expanduser('~'), ''.join(['backup.db', backup_time, '.bak']))
+        self.assertTrue(os.path.isfile(backup))
+        os.unlink(backup)
