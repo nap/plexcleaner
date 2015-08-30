@@ -95,3 +95,4 @@ class TestMediaMovie(unittest.TestCase):
         self.assertTrue('relative_jacket_path' in json_dict)
         self.assertTrue('original_file' in json_dict)
         self.assertTrue('mid' in json_dict)
+        self.assertTrue('should_update' in json_dict)
