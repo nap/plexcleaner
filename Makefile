@@ -58,6 +58,7 @@ movies:
 	@echo "done"
 	@printf "Generating bad database: "
 	@env echo 'bad_data' > $(DATA_PATH)/database/bad.db
+	@env touch $(DATA_PATH)/database/empty.db
 	@echo "done"
 	@printf "Generating test poster file: "
 	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT user_thumb_url FROM metadata_items" | cut -d "/" -f 3- | xargs -P 10 -I {} touch $(DATA_PATH)/"{}"
