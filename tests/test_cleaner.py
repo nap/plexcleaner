@@ -140,7 +140,7 @@ class TestCleaner(unittest.TestCase):
             m = Movie(1, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c',
                       './tests/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
             before = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
-            cleaner.update_database(db, m, should_update=True)
+            cleaner.update_database(db, m)
             after = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
             self.assertNotEqual(before[0], after[0])
             db.rollback()
@@ -150,6 +150,6 @@ class TestCleaner(unittest.TestCase):
             m = Movie(1, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c',
                       './tests/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869')
             before = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
-            cleaner.update_database(db, m, should_update=False)
+            cleaner.update_database(db, m)
             after = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
             self.assertEqual(before[0], after[0])
