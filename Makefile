@@ -56,6 +56,9 @@ movies:
 		env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "UPDATE media_parts SET file = '$(PWD)/$(DATA_PATH)/library/$$(basename "$$FILE")' WHERE id = $$ID"; \
 	done
 	@echo "done"
+	@printf "Generating bad database: "
+	@env echo 'bad_data' > $(DATA_PATH)/database/bad.db
+	@echo "done"
 	@printf "Generating test poster file: "
 	@env sqlite3 $(DATA_PATH)/database/$(DB_NAME) "SELECT user_thumb_url FROM metadata_items" | cut -d "/" -f 3- | xargs -P 10 -I {} touch $(DATA_PATH)/"{}"
 	@echo "done"
