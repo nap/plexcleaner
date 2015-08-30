@@ -25,12 +25,26 @@ def check_permission(db):
     ])
 
 
-def backup_database():
-    pass
+def backup_database(db):
+    backup = os.path.join(os.path.expanduser('~'), ''.join([os.path.basename(db), '.bak']))
+    try:
+        shutil.copy(db, backup)
+        return True
+
+    except (IOError, OSError) as oe:
+        log_error(oe.errno, backup)
+        return False
 
 
-def restore_backup_database():
-    pass
+def restore_backup_database(db):
+    backup = os.path.join(os.path.expanduser('~'), ''.join([os.path.basename(db), '.bak']))
+    try:
+        shutil.copy(backup, db)
+        return True
+
+    except (IOError, OSError) as oe:
+        log_error(oe.errno, backup)
+        return False
 
 
 def get_free_fs_space(export):
@@ -63,7 +77,7 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
 
 def log_error(err, dst):
     if err == errno.EACCES:
-        LOG.error("Not enough permission to edit: {0}".format(dst))
+        LOG.error("Not enough permission on: {0}".format(dst))
 
     elif err == errno.ENOSPC:
         LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
@@ -100,6 +114,7 @@ def copy_jacket(src, dst, skip):
 
     except (IOError, OSError) as oe:
         log_error(oe.errno, dst)
+        return False
 
 
 def create_dir(dst):
@@ -144,6 +159,9 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
     LOG.setLevel(logging.getLevelName(log_level.upper()))
     with database.Database(metadata_home=plex_home, database_override=database_override) as db:
         try:
+            if not check_permission(db):
+                raise PlexCleanerException("Unable to open database, permission denied, located at: {0}".format(db))
+
             library = Library(db)
 
             if not len(library):
