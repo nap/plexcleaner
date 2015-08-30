@@ -1,4 +1,5 @@
 import unittest
+import shutil
 from plexcleaner.exception import PlexCleanerException
 from plexcleaner.database import Database
 
@@ -75,3 +76,9 @@ class TestDatabase(unittest.TestCase):
         self.assertTrue(db.has_uncommited())
         db.commit()
         self.assertFalse(db.has_uncommited())
+
+    def test_database_exception_rows(self):
+        with self.assertRaises(PlexCleanerException) as e:
+            db = Database(database_override='./tests/database/bad.db')
+            db.get_rows()
+        self.assertTrue('Unabled to fetch' in e.exception.message)
