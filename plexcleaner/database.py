@@ -31,6 +31,7 @@ class Database(object):
             LOG.info("Reading Plex database located at {0}".format(db))
             self._connection = sqlite3.connect(db)
             self._cursor = self._connection.cursor()
+            self._cursor.execute('ANALYZE')
 
         except sqlite3.OperationalError:
             raise PlexCleanerException("Could not connect to Plex database: {0}".format(db), severity=logging.ERROR)
@@ -66,21 +67,13 @@ class Database(object):
 
     def commit(self):
         LOG.debug('Commiting last changes to database.')
-        try:
-            self._connection.commit()
-            self._uncommited = False
-
-        except sqlite3.DatabaseError as de:
-            LOG.error("Unable to commit changes to database: {0}".format(de.message))
+        self._connection.commit()
+        self._uncommited = False
 
     def rollback(self):
         LOG.debug('Rollback last changes to database.')
-        try:
-            self._connection.rollback()
-            self._uncommited = False
-
-        except sqlite3.DatabaseError as de:
-            LOG.error("Unable unable to rollback uncommitted changes: {0}".format(de.message))
+        self._connection.rollback()
+        self._uncommited = False
 
     def has_uncommited(self):
         return self._uncommited
