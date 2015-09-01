@@ -141,8 +141,8 @@ def update_database(db, m):
 @click.option('--database-override', **cli.database_override)
 def clean(plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
     LOG.setLevel(logging.getLevelName(log_level.upper()))
-    with database.Database(metadata_home=plex_home, database_override=database_override) as db:
-        try:
+    try:
+        with database.Database(metadata_home=plex_home, database_override=database_override) as db:
             if not check_permission(db):
                 raise PlexCleanerException("Unable to open database, permission denied, located at: {0}".format(db),
                                            severity=logging.ERROR)
@@ -191,13 +191,13 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
                 else:
                     LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
 
-        except PlexCleanerException:
-            LOG.error('PlexCleaner did not process media library.')
-            sys.exit(1)
+    except PlexCleanerException:
+        LOG.error('PlexCleaner did not process media library.')
+        sys.exit(1)
 
-        except KeyboardInterrupt:
-            LOG.info("bye.")
-            sys.exit(0)
+    except KeyboardInterrupt:
+        LOG.info("bye.")
+        sys.exit(0)
 
 if __name__ == '__main__':
     clean()
