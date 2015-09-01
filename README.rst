@@ -13,6 +13,9 @@ This application rely on a working ``sqlite3`` database found in the Plex Media 
 contained in the media library folder. If a file has default value as metadata, the application will assume that the media file was not correctly
 matched by Plex. Therefore, the application will not process that particular file.
 
+Note
+----
+Plex Database is usually set with ``rw-r--r--`` permissions and has group and owner set with ``plex`` user. You can run this script as the ``plex`` user or as ``root`` but you will need to ``chmod`` the database file with ``774``.
 Help
 ----
 ::
