@@ -5,7 +5,7 @@ import os
 import signal
 import errno
 import shutil
-import pwd
+
 from datetime import datetime
 
 from plexcleaner import LOG
@@ -15,15 +15,6 @@ import cli
 import database
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
-
-
-def check_permission(db):
-    current_user = pwd.getpwuid(os.geteuid()).pw_name
-    return all([
-        current_user in ['root', 'plex'],
-        os.access(db, os.W_OK),
-        os.access(db, os.R_OK)
-    ])
 
 
 def backup_database(db):
@@ -143,10 +134,6 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
     LOG.setLevel(logging.getLevelName(log_level.upper()))
     try:
         with database.Database(metadata_home=plex_home, database_override=database_override) as db:
-            if not check_permission(db):
-                raise PlexCleanerException("Unable to open database, permission denied, located at: {0}".format(db),
-                                           severity=logging.ERROR)
-
             if not backup_database(db):
                 raise PlexCleanerException('Unable to create database backup', severity=logging.ERROR)
 
