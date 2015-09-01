@@ -175,10 +175,9 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
 
                 if movie.matched:
                     new_path = movie.get_correct_absolute_path(override=export)
-                    create_dir(new_path)
-
+                    media_dir = create_dir(new_path)
                     media_moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
-                    if media_moved:
+                    if media_dir and media_moved:
                         new_jacket = os.path.join(new_path, jacket)
                         copy_jacket(movie.get_metadata_jacket(metadata_home=plex_home), new_jacket, skip_jacket)
                         # TODO: Copy SRT to library
