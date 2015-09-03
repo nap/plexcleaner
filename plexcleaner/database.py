@@ -23,8 +23,10 @@ class Database(object):
     def __init__(self, metadata_home='/var/lib/plexmediaserver',
                  database_override=None, database_name='com.plexapp.plugins.library.db'):
 
+        sqlite = sqlite3.sqlite_version_info[:2]
         if sqlite3.sqlite_version_info[:2] < (3, 8):
-            raise PlexCleanerException('SQLite bindings are not up to date (requires 3.8)', severity=logging.ERROR)
+            raise PlexCleanerException("SQLite bindings are not up to date "
+                                       "(requires 3.8 current is {0})".format(sqlite), severity=logging.ERROR)
 
         db = os.path.join(metadata_home, self._database_path, database_name)
         try:
