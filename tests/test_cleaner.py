@@ -146,9 +146,6 @@ class TestCleaner(unittest.TestCase):
             self.assertNotEqual(before[0], after[0])
             db.rollback()
 
-    def test_check_permission(self):
-        self.assertFalse(cleaner.check_permission('/'))
-
     def test_database_backup(self):
         self.assertTrue(os.path.isfile('./tests/database/backup.db'))
         backup_time = datetime.now().strftime('.%Y%m%d-%H%M')

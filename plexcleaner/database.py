@@ -33,11 +33,13 @@ class Database(object):
             self._cursor = self._connection.cursor()
             self._cursor.execute('ANALYZE')
 
-        except sqlite3.OperationalError:
-            raise PlexCleanerException("Could not connect to Plex database: {0}".format(db), severity=logging.ERROR)
+        except sqlite3.OperationalError as oe:
+            LOG.debug(oe)
+            raise PlexCleanerException('Could not connect to Plex database', severity=logging.ERROR)
 
         except sqlite3.DatabaseError as de:
-            raise PlexCleanerException("Could not open Plex database: {0}".format(de.message), severity=logging.ERROR)
+            LOG.debug(de.message)
+            raise PlexCleanerException('Could not open Plex database (check permissions)', severity=logging.ERROR)
 
     def __enter__(self):
         return self
@@ -53,6 +55,7 @@ class Database(object):
             return self._cursor.execute(''.join(self._select_movies))
 
         except sqlite3.DatabaseError as de:
+            LOG.debug(de.message)
             raise PlexCleanerException("Unabled to fetch database rows {0}".format(de.message), severity=logging.ERROR)
 
     def update_row(self, mid, value):

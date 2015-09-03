@@ -5,7 +5,7 @@ import os
 import signal
 import errno
 import shutil
-import pwd
+
 from datetime import datetime
 
 from plexcleaner import LOG
@@ -15,15 +15,6 @@ import cli
 import database
 
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
-
-
-def check_permission(db):
-    current_user = pwd.getpwuid(os.geteuid()).pw_name
-    return all([
-        current_user in ['root', 'plex'],
-        os.access(db, os.W_OK),
-        os.access(db, os.R_OK)
-    ])
 
 
 def backup_database(db):
@@ -141,12 +132,8 @@ def update_database(db, m):
 @click.option('--database-override', **cli.database_override)
 def clean(plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
     LOG.setLevel(logging.getLevelName(log_level.upper()))
-    with database.Database(metadata_home=plex_home, database_override=database_override) as db:
-        try:
-            if not check_permission(db):
-                raise PlexCleanerException("Unable to open database, permission denied, located at: {0}".format(db),
-                                           severity=logging.ERROR)
-
+    try:
+        with database.Database(metadata_home=plex_home, database_override=database_override) as db:
             if not backup_database(db):
                 raise PlexCleanerException('Unable to create database backup', severity=logging.ERROR)
 
@@ -175,10 +162,9 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
 
                 if movie.matched:
                     new_path = movie.get_correct_absolute_path(override=export)
-                    create_dir(new_path)
-
+                    media_dir = create_dir(new_path)
                     media_moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
-                    if media_moved:
+                    if media_dir and media_moved:
                         new_jacket = os.path.join(new_path, jacket)
                         copy_jacket(movie.get_metadata_jacket(metadata_home=plex_home), new_jacket, skip_jacket)
                         # TODO: Copy SRT to library
@@ -192,13 +178,13 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
                 else:
                     LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
 
-        except PlexCleanerException:
-            LOG.error('PlexCleaner did not process media library.')
-            sys.exit(1)
+    except PlexCleanerException:
+        LOG.error('PlexCleaner did not process media library.')
+        sys.exit(1)
 
-        except KeyboardInterrupt:
-            LOG.info("bye.")
-            sys.exit(0)
+    except KeyboardInterrupt:
+        LOG.info("bye.")
+        sys.exit(0)
 
 if __name__ == '__main__':
     clean()
