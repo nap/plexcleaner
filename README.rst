@@ -16,6 +16,15 @@ matched by Plex. Therefore, the application will not process that particular fil
 Note
 ----
 Plex Database is usually set with ``rw-r--r--`` permissions and has group and owner set with ``plex`` user. You can run this script as the ``plex`` user or as ``root`` but you will need to ``chmod`` the database file with ``774``.
+
+Requirement
+-----------
+Plex Database create databases using ``SQLite 3.8+``, you will need to have installed on your PMS host the proper version or have an alternate version of ``SQLite3`` installed.
+You can then run ``plexcleaner`` loading the specific SQLite library ``LD_LIBRARY_PATH=/usr/local/lib``
+
+::
+    ``sudo su -s /bin/bash -l plex -c "LD_LIBRARY_PATH=/usr/local/lib python27 plexcleaner/cleaner.py"``
+
 Help
 ----
 ::
