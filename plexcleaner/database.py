@@ -26,7 +26,7 @@ class Database(object):
         sqlite = sqlite3.sqlite_version_info[:2]
         if sqlite3.sqlite_version_info[:2] < (3, 8):
             raise PlexCleanerException("SQLite bindings are not up to date "
-                                       "(requires 3.8 current is {0})".format(sqlite), severity=logging.ERROR)
+                                       "(requires 3.8 current is {0}.{1})".format(*sqlite), severity=logging.ERROR)
 
         db = os.path.join(metadata_home, self._database_path, database_name)
         try:
