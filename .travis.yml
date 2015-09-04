@@ -8,6 +8,8 @@ notifications:
         - "admin@unary.ca"
 env:
     - PYTHONPATH=./
+before_install:
+    - sudo apt-get -y install sqlite3 libsqlite3-dev
 install:
     - pip install tox
     - pip install coveralls
