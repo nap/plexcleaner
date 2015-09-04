@@ -24,9 +24,9 @@ class Database(object):
                  database_override=None, database_name='com.plexapp.plugins.library.db'):
 
         sqlite = sqlite3.sqlite_version_info[:2]
-        if sqlite3.sqlite_version_info[:2] < (3, 8):
+        if sqlite3.sqlite_version_info[:2] < (3, 7):
             raise PlexCleanerException("SQLite bindings are not up to date "
-                                       "(requires 3.8 current is {0}.{1})".format(*sqlite), severity=logging.ERROR)
+                                       "(requires 3.7 current is {0}.{1})".format(*sqlite), severity=logging.ERROR)
 
         db = os.path.join(metadata_home, self._database_path, database_name)
         try:

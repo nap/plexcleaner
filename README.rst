@@ -19,7 +19,7 @@ Plex Database is usually set with ``rw-r--r--`` permissions and has group and ow
 
 Requirement
 -----------
-Plex Database create databases using ``SQLite 3.8+``, you will need to have installed on your PMS host the proper version or have an alternate version of ``SQLite3`` installed.
+Plex Database create databases using ``SQLite 3.7+``, you will need to have installed on your PMS host the proper version or have an alternate version of ``SQLite3`` installed.
 You can then run ``plexcleaner`` loading the specific SQLite library ``LD_LIBRARY_PATH=/usr/local/lib``.
 
 ::
