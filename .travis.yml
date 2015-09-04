@@ -12,6 +12,7 @@ install:
     - pip install tox
     - pip install coveralls
 script:
+    - sqlite3 -version
     - python setup.py test
 after_success:
     - coveralls
