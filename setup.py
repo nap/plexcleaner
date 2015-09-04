@@ -1,5 +1,5 @@
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
-__version__ = '0.1a'
+__version__ = '0.1a0'
 
 import os
 import sys
