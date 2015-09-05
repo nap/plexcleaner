@@ -16,6 +16,7 @@ class Library(object):
 
     def __init__(self, db):
         self.library = []
+        self.library_paths = []
         self.effective_size = 0
         self.has_missing_file = False
 
@@ -27,6 +28,9 @@ class Library(object):
 
     def _update_library(self, movie):
         self.library.append(movie)
+
+        if movie.library_path not in self.library_paths:
+            self.library_paths.append(movie.library_path)
 
         if movie.exist and movie.matched:  # Movie might be in the database but it might be absent in the filesystem
             self.effective_size += movie.size
@@ -49,7 +53,7 @@ class Movie(object):
     _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
     _jacket_path = "{0}/{1}.bundle/Contents/_stored/{2}"
 
-    def __init__(self, mid, title, original_file, year, size, fps, guid, jacket):
+    def __init__(self, mid, title, original_file, year, size, fps, guid, jacket, library_path):
         self.mid = mid
         self.original_file = original_file
         self.filepath = os.path.dirname(original_file)
@@ -65,6 +69,8 @@ class Movie(object):
         self.fps = fps
         self.exist = os.path.exists(original_file)
         self.matched = not guid.startswith('local://')
+
+        self.library_path = library_path
 
         if self.matched:
             h = hashlib.sha1(guid).hexdigest()
