@@ -159,3 +159,9 @@ class TestCleaner(unittest.TestCase):
         result = cleaner.backup_database('/etc/sudoers')
         self.assertIn('Not enough permission', str(l))
         self.assertFalse(result)
+
+    def test_cleaner_permission(self):
+        self.assertTrue(cleaner.has_permission('/tmp'))
+
+    def test_cleaner_permission_false(self):
+        self.assertFalse(cleaner.has_permission('/etc'))
