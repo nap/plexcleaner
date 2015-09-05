@@ -26,6 +26,8 @@ def has_permission(e):
     if no_perm:
         raise PlexCleanerException("Missing Read or Write permission on {0}".format(no_perm), severity=logging.ERROR)
 
+    return True
+
 
 def backup_database(db):
     backup_time = datetime.now().strftime('.%Y%m%d-%H%M')
