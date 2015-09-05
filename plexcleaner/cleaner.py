@@ -17,6 +17,10 @@ import database
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
+def has_permission(e):
+    return all([os.access(e, os.W_OK), os.access(e, os.R_OK)])
+
+
 def backup_database(db):
     backup_time = datetime.now().strftime('.%Y%m%d-%H%M')
     backup = os.path.join(os.path.expanduser('~'), ''.join([os.path.basename(db), backup_time, '.bak']))
@@ -148,6 +152,10 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
 
             if export:
                 LOG.info("Will consolidate library in: '{0}'".format(export))
+
+                if not has_permission(export):
+                    raise PlexCleanerException('No Read or Write permission on export directory {0}'.format(export),
+                                               severity=logging.ERROR)
 
                 space = get_free_fs_space(export)
                 if library.effective_size > space:
