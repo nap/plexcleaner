@@ -18,7 +18,13 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 def has_permission(e):
-    return all([os.access(e, os.W_OK), os.access(e, os.R_OK)])
+    no_perm = []
+    for i in e:
+        if not all([os.access(i, os.W_OK), os.access(i, os.R_OK)]):
+            no_perm.append(i)
+
+    if no_perm:
+        raise PlexCleanerException("Missing Read or Write permission on {0}".format(no_perm), severity=logging.ERROR)
 
 
 def backup_database(db):
@@ -152,16 +158,15 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
 
             if export:
                 LOG.info("Will consolidate library in: '{0}'".format(export))
-
-                if not has_permission(export):
-                    raise PlexCleanerException('No Read or Write permission on export directory {0}'.format(export),
-                                               severity=logging.ERROR)
-
+                has_permission([export])
                 space = get_free_fs_space(export)
                 if library.effective_size > space:
                     raise PlexCleanerException('Remaining space on the target filesystem is not enough to export the '
                                                'library {0} Bytes > {1} Bytes'.format(library.effective_size, space),
                                                severity=logging.CRITICAL)
+
+            else:
+                has_permission(library.library_paths)
 
             if update and is_plex_running():
                 raise PlexCleanerException('Should not update database if Plex is running', severity=logging.ERROR)
