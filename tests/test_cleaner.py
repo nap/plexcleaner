@@ -162,7 +162,13 @@ class TestCleaner(unittest.TestCase):
         self.assertFalse(result)
 
     def test_cleaner_permission(self):
-        self.assertTrue(cleaner.has_permission('/tmp'))
+        self.assertTrue(cleaner.has_permission(['/tmp']))
+
+    def test_cleaner_permission_multiple(self):
+        self.assertTrue(cleaner.has_permission(['/tmp', '/var/tmp']))
 
     def test_cleaner_permission_false(self):
-        self.assertFalse(cleaner.has_permission('/etc'))
+        self.assertFalse(cleaner.has_permission(['/etc']))
+
+    def test_cleaner_permission_multiple_false(self):
+        self.assertFalse(cleaner.has_permission(['/etc', '/opt']))
