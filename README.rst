@@ -15,12 +15,12 @@ matched by Plex. Therefore, the application will not process that particular fil
 
 Note
 ----
-Plex Database is usually set with ``rw-r--r--`` permissions and has group and owner set with ``plex`` user. You can run this script as the ``plex`` user or as ``root`` but you will need to ``chmod`` the database file with ``774``.
+Plex Database is usually set with ``rw-r--r--`` permissions and has group and owner set with ``plex`` user. You can run this script as the ``plex`` user or as ``root`` but you will need to ``chmod`` the database file and the containing folder with ``777`` otherwise.
 
 Requirement
 -----------
-Plex Database create databases using ``SQLite 3.7+``, you will need to have installed on your PMS host the proper version or have an alternate version of ``SQLite3`` installed.
-You can then run ``plexcleaner`` loading the specific SQLite library ``LD_LIBRARY_PATH=/usr/local/lib``.
+Plex create databases using ``SQLite 3.7+``, you will need to have installed on your PMS host the proper version or have an alternate version of ``SQLite3`` installed.
+You can then run ``plexcleaner`` loading the specific SQLite library. On CentOS, they're located in the local lib folder: ``LD_LIBRARY_PATH=/usr/local/lib``. To execute as plex with the proper library after installing an updated version of ``SQLite``, run the following command.
 
 ::
 
