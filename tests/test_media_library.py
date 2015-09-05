@@ -19,14 +19,14 @@ class TestMediaLibrary(unittest.TestCase):
     def test_update_library(self):
         with database.Database(database_override='./tests/database/com.plexapp.plugins.library.db') as db:
             library = Library(db)
-            movie = Movie(1, u"a", "b", 1, 2, 2.2, "d", "e")
+            movie = Movie(1, u"a", 'b', 1, 2, 2.2, 'd', 'e', '/test')
             library._update_library(movie)
             self.assertEqual(len(library), self._nb_movie + 1)
 
     def test_effective_size(self):
         with database.Database(database_override='./tests/database/com.plexapp.plugins.library.db') as db:
             library = Library(db)
-            movie = Movie(2, u"a", 'b', 1, 2, 2.2, 'd', 'e')
+            movie = Movie(2, u"a", 'b', 1, 2, 2.2, 'd', 'e', '/test')
             movie.exist = False
             library._update_library(movie)
             self.assertEqual(library.effective_size, self._effective_size)
