@@ -13,7 +13,6 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 class Library(object):
     _B_TO_GB = 9.3132257461547852e-10
-    # TODO: Figureout what media_items.deleted_at implies
 
     def __init__(self, db):
         self.library = []
