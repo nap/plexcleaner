@@ -111,7 +111,8 @@ def create_dir(dst):
             LOG.info("Directory '{0}' already exist.".format(dst))
             return False
 
-        raise PlexCleanerException("Unable to create directory '{0}'".format(dst), severity=logging.ERROR)
+        raise PlexCleanerException("Unable to create directory '{0}' check permissions".format(dst),
+                                   severity=logging.ERROR)
 
 
 def update_database(db, m):
