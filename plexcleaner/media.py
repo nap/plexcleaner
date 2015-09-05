@@ -34,7 +34,7 @@ class Library(object):
 
         if not movie.exist:
             self.has_missing_file = True
-            LOG.warning("The file {0} is missing".format(movie.original_file))
+            LOG.warning("The file {0} is missing from the library".format(movie.original_file))
 
     def __iter__(self):
         for m in self.library:
