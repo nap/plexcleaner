@@ -24,6 +24,7 @@ class Library(object):
             movie = Movie(*row)
             self._update_library(movie)
 
+        LOG.info("There are {0} different media source".format(len(self.library_paths)))
         LOG.info("Library size is {0:0.3f} gigabyte".format(self.effective_size * self._B_TO_GB))
 
     def _update_library(self, movie):
