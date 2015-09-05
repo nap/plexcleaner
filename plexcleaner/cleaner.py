@@ -134,7 +134,7 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
     LOG.setLevel(logging.getLevelName(log_level.upper()))
     try:
         with database.Database(metadata_home=plex_home, database_override=database_override) as db:
-            if not backup_database(db):
+            if not backup_database(db.filename):
                 raise PlexCleanerException('Unable to create database backup', severity=logging.ERROR)
 
             library = Library(db)

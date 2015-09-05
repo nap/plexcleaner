@@ -35,6 +35,7 @@ class Database(object):
                 LOG.debug("User database override {0}".format(db))
 
             LOG.info("Reading Plex database located at {0}".format(db))
+            self.filename = db
             self._connection = sqlite3.connect(db)
             self._cursor = self._connection.cursor()
             self._cursor.execute('ANALYZE')
