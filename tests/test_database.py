@@ -1,5 +1,4 @@
 import unittest
-import os
 from plexcleaner.exception import PlexCleanerException
 from plexcleaner.database import Database
 
