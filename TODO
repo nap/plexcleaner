@@ -1,3 +1,3 @@
-Check if user running plexcleaner has access to media library
+Check if user running plexcleaner has access to media library, join section_locations' root_path on section_id
 Import srt file (/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Media/localhost/5/e0b5166ba668a2065f9593ad7cc84a5b352ba2f.bundle/Contents/Subtitles/en/com.plexapp.agents.opensubtitles_fd0444ab4c8e1d103c9e868bcb3253603a8b4fb7.srt)
 Generate HTML report of file copied/moved/deleted/untouched
