@@ -168,7 +168,11 @@ class TestCleaner(unittest.TestCase):
         self.assertTrue(cleaner.has_permission(['/tmp', '/var/tmp']))
 
     def test_cleaner_permission_false(self):
-        self.assertFalse(cleaner.has_permission(['/etc']))
+        with self.assertRaises(PlexCleanerException) as e:
+            cleaner.has_permission(['/etc'])
+        self.assertTrue('Missing Read or Write permission' in e.exception.message)
 
     def test_cleaner_permission_multiple_false(self):
-        self.assertFalse(cleaner.has_permission(['/etc', '/opt']))
+        with self.assertRaises(PlexCleanerException) as e:
+            cleaner.has_permission(['/etc', '/opt'])
+        self.assertTrue('Missing Read or Write permission' in e.exception.message)
