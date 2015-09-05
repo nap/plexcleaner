@@ -7,6 +7,10 @@ all: build
 
 build: clean schema data movies dummy
 
+section_locations.ddl:
+	@printf "Create schema section_locations: "
+	@sqlite3 $(DATA_PATH)/database/$(DB_NAME) < $(DB_SQL)/section_locations.ddl.sql
+	@echo "done"
 metadata_items.ddl:
 	@printf "Create schema metadata_items: "
 	@sqlite3 $(DATA_PATH)/database/$(DB_NAME) < $(DB_SQL)/metadata_items.ddl.sql
@@ -31,10 +35,14 @@ metadata_items.data:
 	@printf "Insert data metadata_items: "
 	@sqlite3 $(DATA_PATH)/database/$(DB_NAME) < $(DB_SQL)/metadata_items.data.sql
 	@echo "done"
+section_locations.data:
+	@printf "Insert data section_locations: "
+	@sqlite3 $(DATA_PATH)/database/$(DB_NAME) < $(DB_SQL)/section_locations.data.sql
+	@echo "done"
 
-schema: metadata_items.ddl media_items.ddl media_part.ddl
+schema: metadata_items.ddl media_items.ddl media_part.ddl section_locations.ddl
 
-data: media_items.data media_part.data metadata_items.data
+data: media_items.data media_part.data metadata_items.data section_locations.data
 
 clean:
 	@printf "Cleaning old test data: "
