@@ -51,7 +51,7 @@ setup_info = {
     'tests_require': ['tox'],
     'cmdclass': {'test': Tox},
     'entry_points': {
-        'console_scripts': ['plexcleaner = plexcleaner.cleaner:clean']
+        'console_scripts': ['plexcleaner = plexcleaner.cleaner:main']
     },
     'classifiers': [
         'Development Status :: 2 - Pre-Alpha',
