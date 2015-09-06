@@ -18,9 +18,15 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class Configuration(object):
-    def __init__(self, args):
-        args['log_level'] = args['log_level'].upper()
-        self.__dict__.update(args)
+    def __init__(self, plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
+        self.plex_home = plex_home
+        self.export = export
+        self.update = update
+        self.jacket = jacket
+        self.interrupt = interrupt
+        self.log_level = log_level.upper()
+        self.database_override = database_override
+        self.skip_jacket = skip_jacket
 
 
 def has_permission(e):
@@ -150,7 +156,7 @@ def update_database(db, m):
 @click.option('--log-level', **cli.log_level)
 @click.option('--database-override', **cli.database_override)
 def main(**kwargs):
-    config = Configuration(kwargs)
+    config = Configuration(**kwargs)
     clean(config)
 
 
