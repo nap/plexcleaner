@@ -17,6 +17,12 @@ import database
 __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
+class Configuration(object):
+    def __init__(self, args):
+        args['log_level'] = args['log_level'].upper()
+        self.__dict__.update(args)
+
+
 def has_permission(e):
     no_perm = []
     for i in e:
@@ -143,10 +149,15 @@ def update_database(db, m):
 @click.option('--interrupt', **cli.interrupt)
 @click.option('--log-level', **cli.log_level)
 @click.option('--database-override', **cli.database_override)
-def clean(plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
-    LOG.setLevel(logging.getLevelName(log_level.upper()))
+def main(**kwargs):
+    config = Configuration(kwargs)
+    clean(config)
+
+
+def clean(config):
+    LOG.setLevel(logging.getLevelName(config.log_level))
     try:
-        with database.Database(metadata_home=plex_home, database_override=database_override) as db:
+        with database.Database(metadata_home=config.plex_home, database_override=config.database_override) as db:
             if not backup_database(db.filename):
                 raise PlexCleanerException('Unable to create database backup', severity=logging.ERROR)
 
@@ -155,13 +166,13 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
             if not len(library):
                 raise PlexCleanerException("Library is empty.", severity=logging.WARNING)
 
-            if library.has_missing_file and interrupt:
+            if library.has_missing_file and config.interrupt:
                 raise PlexCleanerException('Missing media file on the filesystem', severity=logging.WARNING)
 
-            if export:
-                LOG.info("Will consolidate library in: '{0}'".format(export))
-                has_permission([export])
-                space = get_free_fs_space(export)
+            if config.export:
+                LOG.info("Will consolidate library in: '{0}'".format(config.export))
+                has_permission([config.export])
+                space = get_free_fs_space(config.export)
                 if library.effective_size > space:
                     raise PlexCleanerException('Remaining space on the target filesystem is not enough to export the '
                                                'library {0} Bytes > {1} Bytes'.format(library.effective_size, space),
@@ -170,22 +181,24 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
             else:
                 has_permission(library.library_paths)
 
-            if update and is_plex_running():
+            if config.update and is_plex_running():
                 raise PlexCleanerException('Should not update database if Plex is running', severity=logging.ERROR)
 
             for movie in library:
                 LOG.info(u"Processing: '{0}'".format(movie.basename))
 
                 if movie.matched:
-                    new_path = movie.get_correct_absolute_path(override=export)
+                    new_path = movie.get_correct_absolute_path(override=config.export)
                     media_dir = create_dir(new_path)
-                    media_moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=export))
+                    media_moved = move_media(movie.original_file,
+                                             movie.get_correct_absolute_file(override=config.export))
                     if media_dir and media_moved:
-                        new_jacket = os.path.join(new_path, jacket)
-                        copy_jacket(movie.get_metadata_jacket(metadata_home=plex_home), new_jacket, skip_jacket)
+                        new_jacket = os.path.join(new_path, config.jacket)
+                        copy_jacket(movie.get_metadata_jacket(metadata_home=config.plex_home),
+                                    new_jacket, config.skip_jacket)
                         # TODO: Copy SRT to library
 
-                        if movie.need_update(export=export) and update:
+                        if movie.need_update(export=config.export) and config.update:
                             update_database(db, movie)
 
                     else:
@@ -203,4 +216,4 @@ def clean(plex_home, export, update, jacket, interrupt, log_level, database_over
         sys.exit(0)
 
 if __name__ == '__main__':
-    clean()
+    main()
