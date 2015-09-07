@@ -84,30 +84,31 @@ def is_plex_running(pid_file='/var/run/PlexMediaServer.pid'):
 
 def log_error(err, dst):
     if err == errno.EACCES:
-        LOG.error("Not enough permission on: {0}".format(dst))
+        LOG.error(u"Not enough permission on: {0}".format(dst))
 
     elif err == errno.ENOSPC:
-        LOG.error("Not enough space on destination: {0}".format(os.path.dirname(dst)))
+        LOG.error(u"Not enough space on destination: {0}".format(os.path.dirname(dst)))
 
     elif err == errno.ENOENT:
-        LOG.error("Unable to locate source file to copy to {0}".format(dst))
+        LOG.error(u"Unable to locate source file to copy to {0}".format(dst))
 
     else:
-        LOG.error("Unknown error occurred while executing operation to destination: {0}".format(os.path.dirname(dst)))
+        LOG.error(u"Unknown error occurred while executing operation to destination: {0}".format(os.path.dirname(dst)))
 
 
-def move_media(src, dst):
+def move_media(src, dst, interrupt):
     try:
-        LOG.debug("Copy file '{0}' to '{1}'".format(src, dst))
+        LOG.debug(u"Copy file '{0}' to '{1}'".format(src, dst))
         if os.path.isfile(dst):
-            LOG.info("File '{0}' already exist, will override if not the same file.".format(src))
+            LOG.info(u"File '{0}' already exist, will override if not the same file.".format(src))
 
         shutil.move(src, dst)
         return True
 
     except (IOError, OSError) as oe:
         log_error(oe.errno, dst)
-        raise PlexCleanerException('Media movie error occurred', severity=logging.CRITICAL)
+        if interrupt:
+            raise PlexCleanerException('Media movie move error occurred (file missing)', severity=logging.CRITICAL)
 
 
 def copy_jacket(src, dst, skip):
@@ -197,7 +198,8 @@ def clean(config):
                     new_path = movie.get_correct_absolute_path(override=config.export)
                     media_dir = create_dir(new_path)
                     media_moved = move_media(movie.original_file,
-                                             movie.get_correct_absolute_file(override=config.export))
+                                             movie.get_correct_absolute_file(override=config.export),
+                                             config.interrupt)
                     if media_dir and media_moved:
                         new_jacket = os.path.join(new_path, config.jacket)
                         copy_jacket(movie.get_metadata_jacket(metadata_home=config.plex_home),
@@ -211,7 +213,7 @@ def clean(config):
                         LOG.warning("Unable to move {0} to {1}".format(movie.correct_title, new_path))
 
                 else:
-                    LOG.info("Movie '{0}' was not matched in Plex".format(movie.basename))
+                    LOG.info(u"Movie '{0}' was not matched in Plex".format(movie.basename))
 
     except PlexCleanerException:
         LOG.error('PlexCleaner did not process media library.')
