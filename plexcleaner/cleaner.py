@@ -204,7 +204,7 @@ def clean(config):
                                     new_jacket, config.skip_jacket)
                         # TODO: Copy SRT to library
 
-                        if movie.need_update(export=config.export) and config.update:
+                        if movie.need_update(override=config.export) and config.update:
                             update_database(db, movie)
 
                     else:
