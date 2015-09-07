@@ -163,6 +163,9 @@ def main(**kwargs):
 def clean(config):
     LOG.setLevel(logging.getLevelName(config.log_level))
     try:
+        if config.update and is_plex_running():
+            raise PlexCleanerException('Should not update database if Plex is running', severity=logging.ERROR)
+
         with database.Database(metadata_home=config.plex_home, database_override=config.database_override) as db:
             if not backup_database(db.filename):
                 raise PlexCleanerException('Unable to create database backup', severity=logging.ERROR)
@@ -170,7 +173,7 @@ def clean(config):
             library = Library(db)
 
             if not len(library):
-                raise PlexCleanerException("Library is empty.", severity=logging.WARNING)
+                raise PlexCleanerException('Library is empty', severity=logging.WARNING)
 
             if library.has_missing_file and config.interrupt:
                 raise PlexCleanerException('Missing media file on the filesystem', severity=logging.WARNING)
@@ -181,14 +184,11 @@ def clean(config):
                 space = get_free_fs_space(config.export)
                 if library.effective_size > space:
                     raise PlexCleanerException('Remaining space on the target filesystem is not enough to export the '
-                                               'library {0} Bytes > {1} Bytes'.format(library.effective_size, space),
+                                               "library {0} Bytes > {1} Bytes".format(library.effective_size, space),
                                                severity=logging.CRITICAL)
 
             else:
                 has_permission(library.library_paths)
-
-            if config.update and is_plex_running():
-                raise PlexCleanerException('Should not update database if Plex is running', severity=logging.ERROR)
 
             for movie in library:
                 LOG.info(u"Processing: '{0}'".format(movie.basename))
@@ -218,7 +218,7 @@ def clean(config):
         sys.exit(1)
 
     except KeyboardInterrupt:
-        LOG.info("bye.")
+        LOG.info('bye')
         sys.exit(0)
 
 if __name__ == '__main__':
