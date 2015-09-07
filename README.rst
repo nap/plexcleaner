@@ -17,6 +17,8 @@ Note
 ----
 Plex Database is usually set with ``rw-r--r--`` permissions and has group and owner set with ``plex`` user. You can run this script as the ``plex`` user or as ``root`` but you will need to ``chmod`` the database file and the containing folder with ``777`` otherwise.
 
+DO NO run this script with a Plex Database that is out of sync with the content of the media library.
+
 Requirement
 -----------
 Plex create databases using ``SQLite 3.7+``, you will need to have installed on your PMS host the proper version or have an alternate version of ``SQLite3`` installed.
@@ -63,6 +65,7 @@ Suggested Media Library Format
        |- Batman Begins (2005).mp4
        |- Batman Begins (2005).eng.srt
        `- poster.jpg
+
 
 :Version: 0.1a1 of 2015-08-25
 
