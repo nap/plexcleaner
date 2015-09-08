@@ -96,7 +96,7 @@ def log_error(err, dst):
         LOG.error(u"Unknown error occurred while executing operation to destination: {0}".format(os.path.dirname(dst)))
 
 
-def move_media(src, dst, interrupt):
+def move_media(src, dst, interrupt=False):
     try:
         LOG.debug(u"Copy file '{0}' to '{1}'".format(src, dst))
         if os.path.isfile(dst):
