@@ -154,7 +154,7 @@ def update_database(db, m):
 @click.option('--export', **cli.export)
 @click.option('--update/--no-update', **cli.update)
 @click.option('--jacket', **cli.jacket)
-@click.option('--skip-jacket', **cli.skip_jacket)
+@click.option('--no-skip-jacket', **cli.no_skip_jacket)
 @click.option('--interrupt', **cli.interrupt)
 @click.option('--log-level', **cli.log_level)
 @click.option('--database-override', **cli.database_override)

@@ -48,7 +48,7 @@ interrupt = {
     'help': 'Interrupt the whole process if a movie file is not found on the filesystem.'
 }
 
-skip_jacket = {
+no_skip_jacket = {
     'default': True,
     'is_flag': True,
     'help': 'Should the copy of movie jacket be skipped if it\'s already present.'
