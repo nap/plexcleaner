@@ -204,7 +204,8 @@ def clean(config):
                     copy_jacket(movie.get_metadata_jacket(metadata_home=config.plex_home), jacket, config.skip_jacket)
                     # TODO: Copy SRT to library
 
-                    moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=config.export), config.interrupt)
+                    moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=config.export),
+                                       config.interrupt)
                     if moved and config.update and movie.need_update(override=config.export):
                             update_database(db, movie)
 
