@@ -32,17 +32,19 @@ Help
 ----
 ::
 
+    $ python plexcleaner/cleaner.py --help
     Usage: cleaner.py [OPTIONS]
 
     Options:
       --plex-home PATH                Installation location of the Plex Media
-                                      Server.
+                                      Server.  [default: /var/lib/plexmediaserver]
       --export PATH                   Move the updated library format in a new
                                       folder.
       --update / --no-update          Update Plex database with renamed and moved
                                       media.
       --jacket TEXT                   Name that each movie jacket will have.
-      --skip-jacket                   Should the copy of movie jacket be skipped
+                                      [default: poster.jpg]
+      --no-skip-jacket                Should the copy of movie jacket be skipped
                                       if it's already present.
       --interrupt                     Interrupt the whole process if a movie file
                                       is not found on the filesystem.
