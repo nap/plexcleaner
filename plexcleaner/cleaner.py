@@ -115,7 +115,7 @@ def move_media(src, dst, interrupt=False):
 def copy_jacket(src, dst, skip):
     try:
         if os.path.isfile(dst) and skip:
-            LOG.info("Jacket '{0}' already exist, skip.".format(dst))
+            LOG.debug("Jacket '{0}' already exist, skip.".format(dst))
             return False
 
         shutil.copy(src, dst)
@@ -145,7 +145,7 @@ def create_dir(dst):
 def update_database(db, m):
     filename = m.get_correct_absolute_file()
     db.update_row(m.mid, filename)
-    LOG.info("Updating movie '{0}' with path '{1}'".format(m.correct_title, filename))
+    LOG.debug("Updating movie '{0}' with path '{1}'".format(m.correct_title, filename))
     return True
 
 
@@ -206,11 +206,11 @@ def clean(config):
 
                     moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=config.export),
                                        config.interrupt)
-                    if moved and config.update and movie.need_update(override=config.export):
-                            update_database(db, movie)
+                    if not moved:
+                        LOG.info("{0} was not moved to {1}".format(movie.correct_title, new_path))
 
-                    else:
-                        LOG.warning("Unable to move {0} to {1}".format(movie.correct_title, new_path))
+                    elif config.update and movie.need_update(override=config.export):
+                        update_database(db, movie)
 
                 else:
                     LOG.info(u"Movie '{0}' was not matched in Plex".format(movie.basename))
