@@ -18,7 +18,7 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class Configuration(object):
-    def __init__(self, plex_home, export, update, jacket, interrupt, log_level, database_override, skip_jacket):
+    def __init__(self, plex_home, export, update, jacket, interrupt, log_level, database_override, no_skip_jacket):
         self.plex_home = plex_home
         self.export = export
         self.update = update
@@ -26,7 +26,7 @@ class Configuration(object):
         self.interrupt = interrupt
         self.log_level = log_level.upper()
         self.database_override = database_override
-        self.skip_jacket = skip_jacket
+        self.skip_jacket = no_skip_jacket
 
 
 def has_permission(e):
