@@ -100,13 +100,14 @@ def move_media(src, dst, interrupt=False):
     try:
         LOG.debug(u"Copy file '{0}' to '{1}'".format(src, dst))
         if os.path.isfile(dst):
-            LOG.info(u"File '{0}' already exist, will override if not the same file.".format(src))
+            LOG.debug(u"File '{0}' already exist, will override if not the same file.".format(src))
 
         shutil.move(src, dst)
         return True
 
     except (IOError, OSError) as oe:
         log_error(oe.errno, dst)
+
         if interrupt:
             raise PlexCleanerException('Media movie move error occurred (file missing)', severity=logging.CRITICAL)
 
@@ -127,13 +128,14 @@ def copy_jacket(src, dst, skip):
 
 def create_dir(dst):
     try:
-        LOG.info("Creating directory '{0}'.".format(dst))
+        LOG.debug("Creating directory '{0}'.".format(dst))
         os.mkdir(dst)
+
         return True
 
     except OSError as e:
         if e.errno == errno.EEXIST:
-            LOG.info("Directory '{0}' already exist.".format(dst))
+            LOG.debug("Directory '{0}' already exist.".format(dst))
             return False
 
         raise PlexCleanerException("Unable to create directory '{0}' check permissions".format(dst),
@@ -196,17 +198,14 @@ def clean(config):
 
                 if movie.matched:
                     new_path = movie.get_correct_absolute_path(override=config.export)
-                    media_dir = create_dir(new_path)
-                    media_moved = move_media(movie.original_file,
-                                             movie.get_correct_absolute_file(override=config.export),
-                                             config.interrupt)
-                    if media_dir and media_moved:
-                        new_jacket = os.path.join(new_path, config.jacket)
-                        copy_jacket(movie.get_metadata_jacket(metadata_home=config.plex_home),
-                                    new_jacket, config.skip_jacket)
-                        # TODO: Copy SRT to library
+                    create_dir(new_path)
 
-                        if movie.need_update(override=config.export) and config.update:
+                    jacket = os.path.join(new_path, config.jacket)
+                    copy_jacket(movie.get_metadata_jacket(metadata_home=config.plex_home), jacket, config.skip_jacket)
+                    # TODO: Copy SRT to library
+
+                    moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=config.export), config.interrupt)
+                    if moved and config.update and movie.need_update(override=config.export):
                             update_database(db, movie)
 
                     else:
