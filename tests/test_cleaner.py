@@ -140,7 +140,7 @@ class TestCleaner(unittest.TestCase):
 
     def test_update_database(self):
         with Database(database_override='./tests/database/com.plexapp.plugins.library.db') as db:
-            m = Movie(1, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c',
+            m = Movie(1, u"a", '/tests/b.avi', 2010, 2, 2.2, 'c', 1,
                       './tests/posters/com.plexapp.agents.themoviedb_1a3b1b98c2799d759e110285001f536982cdb869',
                       '/test')
             before = db._cursor.execute('SELECT file FROM media_parts WHERE id = ?', (m.mid, )).fetchone()
