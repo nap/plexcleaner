@@ -207,7 +207,8 @@ def clean(config):
                     copy_jacket(movie.get_metadata_jacket(metadata_home=config.plex_home), jacket, config.skip_jacket)
                     # TODO: Copy SRT to library
 
-                    moved = move_media(movie.original_file, movie.get_correct_absolute_file(override=config.export),
+                    moved = move_media(movie.original_file,
+                                       movie.get_correct_absolute_file(override=config.export),
                                        config.interrupt)
                     if not moved:
                         LOG.info("{0} was not moved to {1}".format(movie.correct_title, new_path))
@@ -219,7 +220,7 @@ def clean(config):
                     LOG.info(u"Movie '{0}' was not matched in Plex".format(movie.basename))
 
     except PlexCleanerException:
-        LOG.error('PlexCleaner did not process media library.')
+        LOG.warning('PlexCleaner did not process media library.')
         sys.exit(1)
 
     except KeyboardInterrupt:
