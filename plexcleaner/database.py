@@ -14,7 +14,7 @@ class Database(object):
     _update_movie = 'UPDATE media_parts SET file = ? WHERE id = ?'
     _select_movies = (
         'SELECT media_parts.id, metadata_items.title, media_parts.file, metadata_items.year, '
-        'media_parts.size, media_items.frames_per_second AS fps, metadata_items.guid, metadata_items.media_item_count'
+        'media_parts.size, media_items.frames_per_second AS fps, metadata_items.guid, metadata_items.media_item_count, '
         'metadata_items.user_thumb_url AS jacket, section_locations.root_path AS library_path '
         'FROM media_items '
         'JOIN metadata_items ON media_items.metadata_item_id = metadata_items.id '
