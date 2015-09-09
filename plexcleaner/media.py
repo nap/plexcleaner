@@ -28,6 +28,10 @@ class Library(object):
         LOG.info("Library size is {0:0.3f} gigabyte".format(self.effective_size * self._B_TO_GB))
 
     def _update_library(self, movie):
+        if int(movie.count) > 1:
+            LOG.warning("Movie {0} has duplicate file. Will not process.".format(movie.original_file))
+            return False
+
         self.library.append(movie)
 
         if movie.library_path not in self.library_paths:
@@ -54,7 +58,7 @@ class Movie(object):
     _metadata_path = 'Library/Application Support/Plex Media Server/Metadata/Movies'
     _jacket_path = "{0}/{1}.bundle/Contents/_stored/{2}"
 
-    def __init__(self, mid, title, original_file, year, size, fps, guid, jacket, library_path):
+    def __init__(self, mid, title, original_file, year, size, fps, guid, count, jacket, library_path):
         self.mid = mid
         self.original_file = original_file
         self.filepath = os.path.dirname(original_file)
@@ -70,6 +74,7 @@ class Movie(object):
         self.fps = fps
         self.exist = os.path.exists(original_file)
         self.matched = not guid.startswith('local://')
+        self.count = count
 
         self.library_path = library_path
 
