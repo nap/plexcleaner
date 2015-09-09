@@ -51,5 +51,11 @@ interrupt = {
 no_skip_jacket = {
     'default': True,
     'is_flag': True,
-    'help': 'Should the copy of movie jacket be skipped if it\'s already present.'
+    'help': 'Make sure to override the jacket if it\'s already present.'
+}
+
+no_database_backup = {
+    'default': True,
+    'is_flag': True,
+    'help': 'Prevent application from creating a backup copy of the database.'
 }

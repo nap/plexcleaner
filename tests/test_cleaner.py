@@ -159,9 +159,10 @@ class TestCleaner(unittest.TestCase):
 
     @log_capture()
     def test_database_backup_error(self, l):
-        result = cleaner.backup_database('/etc/sudoers')
+        with self.assertRaises(PlexCleanerException) as e:
+            cleaner.backup_database('/etc/sudoers')
+        self.assertTrue('database backup' in e.exception.message)
         self.assertIn('Not enough permission', str(l))
-        self.assertFalse(result)
 
     def test_cleaner_permission(self):
         self.assertTrue(cleaner.has_permission(['/tmp']))

@@ -18,7 +18,8 @@ __author__ = 'Jean-Bernard Ratte - jean.bernard.ratte@unary.ca'
 
 
 class Configuration(object):
-    def __init__(self, plex_home, export, update, jacket, interrupt, log_level, database_override, no_skip_jacket):
+    def __init__(self, plex_home, export, update, jacket, interrupt,
+                 log_level, database_override, no_skip_jacket, no_database_backup):
         self.plex_home = plex_home
         self.export = export
         self.update = update
@@ -27,6 +28,7 @@ class Configuration(object):
         self.log_level = log_level.upper()
         self.database_override = database_override
         self.skip_jacket = no_skip_jacket
+        self.database_backup = no_database_backup
 
 
 def has_permission(e):
@@ -51,7 +53,7 @@ def backup_database(db):
 
     except (IOError, OSError) as oe:
         log_error(oe.errno, backup)
-        return False
+        raise PlexCleanerException('Unable to create database backup', severity=logging.ERROR)
 
 
 def get_free_fs_space(export):
@@ -158,6 +160,7 @@ def update_database(db, m):
 @click.option('--interrupt', **cli.interrupt)
 @click.option('--log-level', **cli.log_level)
 @click.option('--database-override', **cli.database_override)
+@click.option('--no-database-backup', **cli.no_database_backup)
 def main(**kwargs):
     config = Configuration(**kwargs)
     clean(config)
@@ -170,8 +173,8 @@ def clean(config):
             raise PlexCleanerException('Should not update database if Plex is running', severity=logging.ERROR)
 
         with database.Database(metadata_home=config.plex_home, database_override=config.database_override) as db:
-            if not backup_database(db.filename):
-                raise PlexCleanerException('Unable to create database backup', severity=logging.ERROR)
+            if config.database_backup:
+                backup_database(db.filename)
 
             library = Library(db)
 
