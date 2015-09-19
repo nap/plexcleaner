@@ -8,3 +8,4 @@ tests/dummy
 .tox
 *.pyc
 .coverage.*
+.cache
