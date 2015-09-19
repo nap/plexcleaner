@@ -19,7 +19,8 @@ class Database(object):
         'FROM media_items '
         'JOIN metadata_items ON media_items.metadata_item_id = metadata_items.id '
         'JOIN media_parts ON media_parts.media_item_id = media_items.id '
-        'JOIN section_locations ON section_locations.library_section_id = metadata_items.library_section_id'
+        'JOIN section_locations ON section_locations.library_section_id = metadata_items.library_section_id '
+        'WHERE metadata_items.metadata_type = 1'
     )
 
     def __init__(self, metadata_home='/var/lib/plexmediaserver',
