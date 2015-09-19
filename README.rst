@@ -19,6 +19,10 @@ Plex Database is usually set with ``rw-r--r--`` permissions and has group and ow
 
 **DO NOT** run this script with a Plex Database that is out of sync with the content of the media library.
 
+Limitation
+----------
+This application does not support **TV Shows** or Movies with **multiple files**. Those files will be filtered out of the data retrieval. No processing wil be done on them.
+
 Requirement
 -----------
 Plex create databases using ``SQLite 3.7+``, you will need to have installed on your PMS host the proper version or have an alternate version of ``SQLite3`` installed.
